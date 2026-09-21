@@ -31,8 +31,9 @@ separately below.
   present in the compiled output
 - Deployment scaffolding created: `vercel.json`, `.vercelignore`, `.gitignore`,
   pinned `requirements.txt`, `README.md`
-- **15 correctness fixes applied** (§8) — 7 original, 4 from the fix pass, 4 from the
-  pre-execution sweep
+- **19 correctness fixes applied** (§8) — 7 original, 4 from the fix pass, 4 from the
+  pre-execution sweep, and 4 found only after execution, by auditing the citations themselves,
+  or by reading the deployed page (items 16–19)
 - Harassment record carries **both** routes with the s.6 appeal restored (§4c)
 - **FIRST EXECUTION COMPLETE.** See the verification record below.
 
@@ -61,26 +62,43 @@ separately below.
 | After the D10 fix: `GET /help?problem=<canary>` does not echo | ✓ |
 
 **Currently working on:**
-- **The deployment chain.** GitHub → Vercel → production regression, in that order.
+- **The sourcing batch (§14c).** Deployment is done and production is validated.
 
 **Next exact action — this order is deliberate, do not reorder:**
-1. `git init` + push to GitHub (Devpost requires source code)
-2. Deploy to Vercel
-3. **Full production regression test** — the whole checklist at §14b, against the public URL
-4. Source the prioritised verified records (§14c) — only after production is proven
-5. Phone-width polish → screenshots
+1. ~~`git init` + push to GitHub~~ — **DONE 2026-09-21.** `origin/main` = `8943908`, 30 files
+2. ~~Deploy to Vercel~~ — **DONE 2026-09-21.** Two production-only failures found and fixed (D27)
+3. ~~Full production regression test (§14b)~~ — **DONE 2026-09-22.** 9 of 10 pass, one not run
+4. **Source the prioritised verified records (§14c)** ← *next action*
+5. Phone-width polish at 375px — this also closes acceptance check 9 — then screenshots (3+)
 6. Devpost description · technology list · demo video
 
-**Why deployment precedes sourcing:** provenance cards are the most labour-intensive remaining
+**Deployment chain — live state:**
+
+| Step | State |
+|---|---|
+| Git identity · `gh` · Vercel auth | **VERIFIED** — all three, see §14a |
+| GitHub push | **VERIFIED** — `8943908` on `main`, sole author, no attribution trailer (D26) |
+| Vercel deploy | **LIVE** — one function, region iad1 |
+| **Public URL** | **https://mira-student-support.vercel.app** |
+| Production acceptance test (§14b) | **9 / 10 PASS** — check 9 (mobile viewport) needs a browser |
+
+**What deployment actually caught — and why the order was right.** Vercel reported a successful
+deploy while serving a **static copy of the repository with no function at all**. The project
+had been created with framework preset `Other`, so Vercel copied the directory to the CDN and
+never looked for the FastAPI entrypoint: `Builds: . [0ms]`, build duration 2s. Every app route
+returned Vercel's 79-byte `text/plain` 404 while `/static/css/styles.css` served perfectly —
+a combination that looks like a routing bug and is not one. Nothing local could have revealed
+this, because nothing local asks Vercel to choose a build mode. See **D27**.
+
+**Why deployment preceded sourcing:** provenance cards are the most labour-intensive remaining
 work, and there is no value in perfecting them if the deployed application then turns out to
 have a production-only failure. Public access is a **hard submission requirement**; a richer
-dataset is an improvement. Requirements outrank improvements, so the requirement is proven
-first.
+dataset is an improvement. Requirements outrank improvements — so the requirement was proven
+first, and it did in fact fail first.
 
-**Current blocker:** **Credentials only.** The user must configure a git identity, then run
-`gh auth login` and `vercel login`. Nothing else is outstanding — tooling is installed, the
-repo is initialised and staged, and `vercel.json` is rewritten. Live state is in §14a; the
-exact commands are in §14d.
+**Current blocker:** **None.** The application is public, the data layer loads in the function,
+the stylesheet is a CDN asset, and the privacy canary passes against real production logs. Live
+state is in §14a; the acceptance results are in §14b.
 
 **P0:** Flow B (I need something) + Flow C (I need help)
 **P1:** Flow A (Get me there) — already implemented; retain once production-proven.
@@ -163,6 +181,8 @@ implied certainty.
 | D24 | **`fare_is_free` is an explicit data field, never derived from the numbers** | **LOCKED** | Deriving it from `currency + 0/0` made a genuinely free shuttle and an unestablished rickshaw fare indistinguishable, and the app announced the rickshaw as free. Same error as D11 — a proxy that cannot tell "deliberately zero" from "don't know" must not be the source of truth. The derivation was wrong twice in opposite directions before the field existed, which is the argument for the field | — |
 | D25 | **`vercel.json` replaced: legacy `builds` → `functions.includeFiles`, relying on zero-config FastAPI detection** | **LOCKED** | The original config used `builds` + `@vercel/python` + `@vercel/static`, which is the pre-FastAPI-support mechanism. It appears nowhere in the current Vercel docs (checked 2026-09-21; the FastAPI page was updated 2026-08-27) and, critically, it **bypasses automatic CDN promotion of `app.mount()`**. Under the documented path, Vercel detects the `app` instance in `app.py` and promotes the `StaticFiles` mount to the CDN at build time — which is exactly the deployment contract `templates/base.html` already assumes. `includeFiles` stays, because Vercel traces Python *imports* and would otherwise bundle neither `data/` nor `templates/`. This was **not** reasoned into correctness: it removes an undocumented mechanism in favour of a documented one, and §14b is the gate that decides whether it works | Production validation (§14b) fails on runtime, bundling or static routing — then the fallback is an explicit `api/index.py` entrypoint with `rewrites`, not a return to `builds` |
 | D26 | **No co-author, contributor or "generated with" attribution anywhere in this repository** | **LOCKED** | Owner's direct instruction, 2026-09-21: *"i don't want any co-author nor contributor on the repository."* This is a judged solo submission; a second name in the commit history or the GitHub contributor list changes how the work is attributed. It also overrides the harness's default commit-trailer guidance, which defers to the owner's own instruction | Never. This is not a technical decision open to a better argument |
+| D27 | **`vercel.json` reduced to `$schema` only, and the project's framework preset set explicitly to `fastapi`** — supersedes the `functions.includeFiles` half of **D25** | **LOCKED** | The first production deploy failed **twice, in two different ways, and neither was reachable locally**. **(1)** `functions: {"app.py": …}` was rejected outright: *"The pattern `app.py` defined in `functions` doesn't match any Serverless Functions inside the `api` directory."* Despite the FastAPI docs describing `functions` as keyed by *"your resolved entrypoint file"*, this platform version validates it against `api/**`. **(2)** Removing the key let the deploy report **success while building a static copy of the repository with no function at all** — `Builds: . [0ms]`, build duration 2 s — because the project had been created with preset `Other`. Every app route returned a 79-byte platform 404 while `/static/css/styles.css` served correctly, which reads like a routing bug and is not one. Fixed with `vercel project update mira-student-support --framework fastapi`; the zero-config path then bundled `data/` and `templates/` correctly with **no `includeFiles` at all** (§14b checks 1 and 2). `vercel link` reporting *"Detected FastAPI"* is a **local filesystem heuristic and is not evidence about the build** | A project is created fresh and its preset is `Other` again — set it **before** deploying. Do not re-add `functions` for a root entrypoint; do not return to `builds` |
+| D28 | Flow C **echoes the student's own words back to her in the same response** (`You described: "…"`) | **LOCKED** | She has to see what she typed to judge whether the match is right; the no-match path repopulates the form for the same reason. This is text returned to *the same person, in the same response* — **not** a URL, not a query string, not a generated link, not a store. It looks like a privacy leak to a naive grep, which is exactly why it is pinned here: §14b check 7 tests it, and the echo is why a canary search returns a hit that must be **read** rather than counted | A redesign of the Flow C result page removes the echo — then §14b check 7's wording must change with it |
 
 ---
 
@@ -359,9 +379,18 @@ that claim.
 
 **By flow:**
 - **Flow B** — read-only. No input.
-- **Flow C** — problem text is `POST`ed (never `GET`), used for the current interaction,
-  and not written to any store. Document on the About page exactly what happens technically,
-  including that the text is sent to the model provider when routing is enabled.
+- **Flow C** — problem text is `POST`ed (never `GET`), matched in-process against a fixed topic
+  list, and not written to any store. The About page documents exactly what happens.
+  - **Corrected 2026-09-22.** This bullet previously read *"including that the text is sent to
+    the model provider when routing is enabled."* **D19 removed the LLM entirely**, so there is
+    no model provider and nothing is sent to one. The About page already says the correct
+    thing — *"It is never sent to an AI service or any third party"* — and **check 8 of §14b
+    confirms it against real production logs**. The stale instruction is corrected here so a
+    future session does not "restore" a claim that would now be false.
+  - **The echo is deliberate (D28).** The result page renders `You described: "…"` so she can
+    confirm the match. That is text returned to *her, in the same response* — not a URL, not a
+    query string, not a generated link, not a store. It looks like a privacy leak under a naive
+    grep and is not one; §14b check 7 tests it explicitly.
 - **Flow A** — journey sharing is built and shared **entirely in the browser**. No server
   call, no account, no stored journey.
 
@@ -413,7 +442,7 @@ carries `fare_confidence: "unknown"` deliberately, so the omit path is visible i
 
 ---
 
-## 8. Correctness fixes — **APPLIED** (18 items)
+## 8. Correctness fixes — **APPLIED** (19 items)
 
 Seven original, four found while applying those, four in a pre-execution sweep, one found by
 *running* the app, and two found by auditing the sources themselves. Items 16–18 are the ones
@@ -569,6 +598,21 @@ context `app.py` actually passes, since nothing had ever been rendered):**
     URL is not the same as a *correct* one. Checking that a link resolves does not check that
     it goes where its label says.
 
+19. ✅ **Flow C stated the jurisdiction twice.** A `jurisdiction_tag` chip and a `notice-title`,
+    one line apart, both rendering "Applies in Pakistan" on every Flow C result. Found by
+    reading the rendered page during the §14b acceptance test; a grep for the phrase surfaced it
+    only because the count was **3** where the prose accounted for **1**. The notice block is
+    the deliberate treatment — it carries the explanatory note and renders *before* the
+    procedure — so the chip was removed. Re-verified on production: exactly one occurrence.
+
+    Worth noting how it was missed for so long: every earlier check asked *"is the jurisdiction
+    shown?"* and the answer was always yes. Nobody asked whether it was shown **once**. Presence
+    checks pass on duplicates.
+
+    Note also that the framework-preset failure that made the first deploy serve no application
+    is recorded in **§14a + D27**, not here — it is a deployment configuration defect, not a
+    code-correctness one.
+
 ---
 
 ## 9. Milestones
@@ -679,18 +723,43 @@ step has happened, so a dropped session knows exactly where it stands.
 
 | Step | State | How to verify |
 |---|---|---|
-| Git identity | **PENDING — user configuration** | `git config --get user.name` · `git config --get user.email` |
-| Git repository | **INITIALISED** — `main`, 30 files staged, **no commit yet** | `git status` |
-| GitHub auth | **PENDING** — `gh` installed (2.101.0), not logged in | `gh auth status` |
-| GitHub remote | **NOT CREATED** | `git remote -v` |
-| Vercel auth | **PENDING** — CLI installed (59.23.2), not logged in | `vercel whoami` |
-| Deployment | **NOT ATTEMPTED** | — |
-| Public URL | *— none yet —* | — |
-| Production acceptance test (§14b) | **PENDING** | — |
+| Git identity | **VERIFIED** — `akaheem` | `git config --get user.name` · `git config --get user.email` |
+| Git repository | **VERIFIED** — `main`, 30 files committed as `8943908` | `git status` · `git log --oneline` |
+| GitHub auth | **VERIFIED** — logged in as `akaheem` (scopes: gist, read:org, repo, workflow) | `gh auth status` |
+| GitHub remote | **VERIFIED** — `https://github.com/akaheem/Mira` | `git remote -v` |
+| Vercel auth | **VERIFIED** — `mibraheem45846-8692` | `vercel whoami` |
+| Deployment | **DEPLOYED** — production, function region `iad1`, CLI 59.23.2 | `vercel ls mira-student-support` |
+| Public URL | **https://mira-student-support.vercel.app** | `curl -sI https://mira-student-support.vercel.app/` |
+| Production acceptance test (§14b) | **9 / 10 PASS** — check 9 needs a browser | §14b results table |
 
-**Identity is deliberately not guessed.** Git's `user.name` and `user.email` populate the
-author and committer metadata on every commit, so inventing them would attribute the work to
-someone who does not exist — and D26 requires this repo to read as the owner's alone.
+**Project settings that are load-bearing and must not be reset to defaults:**
+
+| Setting | Value | Why it matters |
+|---|---|---|
+| Framework Preset | `fastapi` | **Not cosmetic.** At `Other`, Vercel builds the repo as a static site and never runs the Python entrypoint — a "successful" deploy that serves no application at all (D27) |
+| Node.js Version | 24.x | Irrelevant to the Python runtime; the Tailwind build is pre-committed |
+| Root Directory | `.` | — |
+
+**Identity was supplied by the owner, never assumed.** Git's `user.name` and `user.email`
+populate the author and committer metadata on every commit, so inventing them would attribute
+the work to someone who does not exist — and D26 requires this repo to read as the owner's
+alone. Each state above was set by the owner and then confirmed by running the command in the
+right-hand column. None was inferred from tooling output that merely looked plausible.
+
+**Two things that looked like failures and were not.** (1) `git config --global user.name` and
+`user.email` *print* the stored value; they do not set it. The first attempt used the read form,
+returned empty, and looked like a broken configuration. (2) `gh auth login` stores its token in
+the **Windows Credential Manager keyring** by default, so `~/.config/gh/hosts.yml` does not
+exist even when logged in — *file absent* is not evidence of *not authenticated*. `gh auth
+status` is the only authoritative check; a filesystem check would have sent us chasing a login
+that was already working.
+
+**The remote was not empty, and was not force-pushed over.** `origin/main` already carried
+`9f56e42 Initial commit` by the owner, holding GitHub's 6-byte auto-generated `README.md`.
+Rather than overwrite it, the local branch was reconciled onto it (`git fetch` → `git reset
+--mixed origin/main`, which clears the index but leaves the working tree untouched), then the
+30 project files were committed on top as `8943908`, with our 10,546-byte `README.md`
+superseding the placeholder. The owner's commit remains in history.
 
 **Tooling confirmed present:** `git` 2.55.0 · `gh` 2.101.0 · Vercel CLI 59.23.2 (minimum for
 FastAPI support is 48.1.8) · Node 24.21.0. Vercel CLI installed via `npm install -g vercel`.
@@ -739,6 +808,34 @@ static CSS → router → provenance rendering → harassment process → privac
 | 9 | Mobile viewport | Renders correctly **on the deployed domain** at 375px, not just locally |
 | 10 | Development-only assumptions | No localhost URL, no debug output, no traceback leaked to the user |
 
+**Results — run against the public URL, 2026-09-22:**
+
+| # | Check | Result | Evidence |
+|---|---|---|---|
+| 1 | Routes | **PASS** | `/`, `/needs`, `/help`, `/journey`, `/about` all `200 text/html`; `/needs` 5,533 B and `/about` 11,890 B, so the JSON data layer loaded *inside* the function |
+| 2 | CSS is a CDN asset | **PASS** | Stylesheet: `X-Vercel-Cache: HIT`, `Age: 111`, ETag, and **no execution region** in `X-Vercel-Id`. The function response for `/` shows `sin1::iad1::…` with `MISS`. Provably different paths. 29,969 bytes |
+| 3 | Provenance rendering | **PASS** | `✓ Verified`, `◇ Illustrative`, `! Not yet verified` each render as glyph **and** label; every `chip-*` class used in the HTML is present in the **deployed** stylesheet — the §8-item-13 safelist regression is fixed in production, not merely locally |
+| 4 | Harassment record | **PASS** | Both routes render; 3/7-day (institutional) and 3/5-day (Ombudsperson) defences **not** collapsed; 30-day appeal and 90-day decision both shown; `Applies in Pakistan` present; zero occurrences of "better", "safer" or "faster" |
+| 5 | Forms | **PASS** | `POST /help` over HTTPS: matched; no-match (gibberish re-renders the form gracefully); urgent (`is_urgent` true, with an honest "not an emergency service" banner) |
+| 6 | Router | **PASS** | `"Mere paas fee ke paise nahi hain"` → `cant_pay_fees`, confidence `medium`, method `keywords` — exactly as specified |
+| 7 | **Privacy canary** | **PASS** | Method is POST; the text appears in **no URL or query string** and in **no generated link** (checked `href`/`action`/`src`); `GET /help?problem=<canary>` returns the plain 4,909-byte form with **zero** echo, so D10 holds in production |
+| 8 | Request-body logging | **PASS** | Fired a unique token through `POST /help`, then read real runtime logs: the only line is `λ POST /help`. Token 0 · "paise" 0 · request body 0 |
+| 9 | Mobile viewport at 375px | **NOT RUN** | Needs a browser. The `viewport` meta is correct (`width=device-width, initial-scale=1`). Deferred to step 5, which is the same work |
+| 10 | Development-only assumptions | **PASS** | Zero occurrences of `localhost`, `127.0.0.1`, `Traceback`, `jinja2`, `werkzeug` or a source path across all five pages |
+
+**One finding from check 4, since fixed — §8 item 19.** Flow C rendered jurisdiction **twice**:
+a `jurisdiction_tag` chip and a `notice-title`, one line apart, both reading "Applies in
+Pakistan". The notice block is the deliberate treatment — it carries the explanatory note and
+renders *before* the procedure — so the redundant chip was removed. Re-verified on production:
+exactly **one** occurrence.
+
+**A note on how a false alarm was avoided.** An early grep showed `Mira Demo Campus Manchester,
+United Kingdom` on the Pakistan harassment card, which looked like exactly the record/location
+mismatch this flow most needs to avoid. It was **not**: that string is the second `<option>` of
+the location selector, and the selected location was `Mira Demo Campus Lahore, Pakistan` —
+correct. A 140-character window around a grep match is not evidence. This is why §12 asks for
+screenshots rather than greps.
+
 **The AI question, answered accurately:** the problem text is **not** sent to any external AI
 service, because there is no LLM in the application at all (D19). Routing is deterministic and
 in-process. So §6's privacy wording — that the text is used to select a topic and then
@@ -746,7 +843,10 @@ discarded, and that we do **not** claim "nothing is stored" because the platform
 request logs — is the accurate description **provided check 8 holds**. If check 8 fails, the
 About page wording is wrong and must be corrected rather than the finding explained away.
 
-### 14c. Sourcing priorities — only after 14b passes
+### 14c. Sourcing priorities — **UNBLOCKED: §14b passed 2026-09-22**
+
+The gate is satisfied. Nine of ten production checks pass against the public URL, and check 9
+is the same browser work as step 5. **This batch may now begin.**
 
 Not an arbitrary quota, and **never** relax §5 to raise the count. A record the source does
 not specifically support stays `unverified` no matter how plausible it is.
@@ -762,29 +862,32 @@ provenance model rather than reading a statistic:
 Current state is **1 verified**, which means the trust model works but is nearly invisible.
 That is the submission-quality bottleneck, not the feature count.
 
-### 14d. Credential handoff — the exact next three commands
+### 14d. Credential handoff — **COMPLETE 2026-09-21**
 
-Everything else is done. These three steps need the owner's own environment, and **no part of
-them should be guessed or automated**:
+These three steps needed the owner's own environment, and **no part of them was guessed or
+automated**. They are retained as the record of what was asked, now that all three are done:
 
 ```
-1.  git config --global user.name  "Your Name"
-    git config --global user.email "you@example.com"
+1.  git config --global user.name  "Your Name"        <- done
+    git config --global user.email "you@example.com"  <- done
 
-2.  gh auth login          # GitHub CLI device/browser flow
+2.  gh auth login          # GitHub CLI device/browser flow   <- done
 
-3.  vercel login           # Vercel CLI device OAuth flow
+3.  vercel login           # Vercel CLI device OAuth flow      <- done
 ```
 
-**Then, in order:** verify all three states (§14a table) → create the commit → create and push
-the GitHub remote → deploy → run the §14b acceptance test against the **public URL**.
+**The sequence that followed, now complete:** verify all three states (§14a table) → create the
+commit → push the GitHub remote → deploy → run the §14b acceptance test against the **public
+URL**. That final step is where both production-only failures surfaced (D27) — which is the
+entire argument for having ordered it before the sourcing batch rather than after.
 
 **Do not record any token, key or session secret in this tracker or anywhere in the repo.**
-State is recorded as `PENDING` / `VERIFIED` only. `.gitignore` already excludes `.env*` and
-`.vercel/`.
+State is recorded as `PENDING` / `VERIFIED` / `DEPLOYED` / `PASS` / `FAIL`, plus the public URL,
+and nothing else. `.gitignore` already excludes `.env*` and `.vercel/`.
 
-**Do not start the §14c sourcing batch until §14b passes.** Public access is a hard submission
-requirement; a richer dataset is an improvement. Requirements outrank improvements.
+**The §14b gate on the §14c sourcing batch is now satisfied** (2026-09-22). Public access was a
+hard submission requirement; a richer dataset is an improvement. Requirements outrank
+improvements — and here the requirement failed first, exactly as that ordering predicted.
 
 ---
 
@@ -808,6 +911,13 @@ hypothesis, and the second-order bugs it introduces are the ones that survive re
 2. It does **not** affect Vercel: each cold start is a new process with a fresh cache, and a
    new deployment is a new function version. Recorded so local behaviour is not mistaken for a
    production risk.
+3. **Nothing local can validate a deployment *configuration*.** Both production failures (D27)
+   were config, not code: a rejected `functions` key, and a project preset of `Other`. Local
+   `uvicorn` cannot observe either, and `vercel link` printing *"Detected FastAPI"* is a
+   filesystem heuristic that reads like a build confirmation. **The only test of a deploy
+   config is a deploy** — which is why §14b runs against the public URL, and why *"Deployment
+   successful"* was never accepted as the criterion. It was in fact reported for a deployment
+   that served no application.
 
 **The shell-safety classifier remains intermittent**, blocking `Bash` and `PowerShell` for
 stretches at a time; the work above was done in the windows when it was up. Read-only tools

@@ -40,13 +40,16 @@
 
     <div class="chips chips-lead">
       {{ m.provenance(process) }}
-      {{ m.jurisdiction_tag(process) }}
     </div>
 
     {#
-      The jurisdiction block. A jurisdiction-specific legal process shown without its
-      jurisdiction reads as a universal rule, which is the one failure mode this flow
-      cannot afford. Rendered before the procedure, not after it.
+      The jurisdiction block, and the ONLY place Flow C states jurisdiction. A
+      jurisdiction-specific legal process shown without its jurisdiction reads as a
+      universal rule, which is the one failure mode this flow cannot afford. Rendered
+      before the procedure, not after it.
+
+      The provenance chip above deliberately does NOT also tag jurisdiction. Rendering
+      both put "Applies in Pakistan" on the page twice, one line apart.
     #}
     {% if process.jurisdiction and process.jurisdiction != "demo environment" %}
       <div class="notice notice-jurisdiction" role="note">
