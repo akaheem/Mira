@@ -1,0 +1,294 @@
+[
+  {
+    "id": "pk-lhr-s01",
+    "problem_key": "cant_pay_fees",
+    "display_name": "I can't pay my semester fee",
+    "country": "Pakistan",
+    "city": "Lahore",
+    "campus": "Mira Demo Campus",
+    "office_name": "Student Financial Aid Office",
+    "office_contact": "Ground floor, Administration Block",
+    "documents": [
+      "Student card or enrolment proof",
+      "Fee challan for the current semester",
+      "Household income certificate or salary slip",
+      "Copy of guardian's CNIC"
+    ],
+    "steps": [
+      "Collect the fee challan from the accounts office if you do not already have it.",
+      "Go to the Student Financial Aid Office and ask specifically about need-based assistance.",
+      "Submit the income certificate with the assistance form.",
+      "Ask which external schemes you can also be considered for - several run in parallel.",
+      "Get the expected decision date in writing before you leave."
+    ],
+    "timeline": "Usually decided within 2-4 weeks of a complete application.",
+    "jurisdiction": "Pakistan",
+    "jurisdiction_note": "In Pakistan, need-based support is normally routed through the university's financial aid office and may draw on external schemes such as PEEF, Bait-ul-Mal, or provincial endowments. The office name differs per institution.",
+    "source_url": null,
+    "source_name": "",
+    "source_date": "2026-09-20",
+    "provenance": "unverified"
+  },
+  {
+    "id": "pk-lhr-s02",
+    "problem_key": "scholarship_support",
+    "display_name": "I want to apply for a scholarship",
+    "country": "Pakistan",
+    "city": "Lahore",
+    "campus": "Mira Demo Campus",
+    "office_name": "Student Financial Aid Office",
+    "office_contact": "Ground floor, Administration Block",
+    "documents": [
+      "Student card or enrolment proof",
+      "Previous result card or transcript",
+      "Household income certificate",
+      "Copy of guardian's CNIC",
+      "Bank account details in your own name"
+    ],
+    "steps": [
+      "Ask the Financial Aid Office which schemes are currently open - they change through the year.",
+      "Check whether you qualify on merit, on need, or both; most schemes are one or the other.",
+      "Prepare every document before the deadline; incomplete applications are usually rejected outright.",
+      "Ask whether the same documents can be reused for more than one scheme.",
+      "Note the announcement date and check back rather than waiting to be contacted."
+    ],
+    "timeline": "Deadlines are scheme-specific. Ask for the current list with dates.",
+    "jurisdiction": "Pakistan",
+    "jurisdiction_note": "Pakistan runs multiple parallel scholarship schemes - national programmes, provincial endowments, and donor schemes. Each has separate eligibility and deadlines.",
+    "source_url": null,
+    "source_name": "",
+    "source_date": "2026-09-20",
+    "provenance": "unverified"
+  },
+  {
+    "id": "pk-lhr-s03",
+    "problem_key": "harassment_concern",
+    "display_name": "I want to raise a harassment concern",
+    "country": "Pakistan",
+    "city": "Lahore",
+    "campus": "Mira Demo Campus",
+    "office_name": "Your institution's Inquiry Committee, or the Ombudsperson",
+    "office_contact": "Ask your institution's administration for the current Inquiry Committee list, or contact the Ombudsperson directly.",
+    "documents": [
+      "A written account of what happened, in your own words",
+      "Dates, times, and locations if you have them",
+      "Any messages, emails, or records you already have",
+      "Names of anyone who witnessed it, if you want them involved"
+    ],
+    "steps": [],
+    "timeline": "",
+    "options": [
+      {
+        "name": "Route 1 - Inquiry Committee at your institution",
+        "summary": "Handled inside your institution, by its own Inquiry Committee.",
+        "filed_with": "The organisation's Inquiry Committee. You may approach any member of it directly.",
+        "steps": [
+          "You may approach any member of the Inquiry Committee directly. You do not have to raise it with your department or your supervisor first.",
+          "Put your complaint in writing. A plain account in your own words is enough.",
+          "Within 3 days of receiving the written complaint, the Committee communicates the charges to the accused.",
+          "The accused has 7 days from the charges being communicated to submit a written defence. If they do not, the Committee may proceed ex parte.",
+          "The Committee submits its findings and recommendations to the Competent Authority within 30 days of the inquiry starting.",
+          "If a penalty is recommended, the Competent Authority imposes it within one week of receiving the recommendations.",
+          "If you are not satisfied with the Competent Authority's decision, you may appeal to the Ombudsperson within 30 days of being informed of it."
+        ],
+        "timeline": "Statutory: charges within 3 days, defence within 7 days, findings within 30 days, penalty within one week after that. A decision of the Competent Authority can be appealed to the Ombudsperson within 30 days."
+      },
+      {
+        "name": "Route 2 - The Ombudsperson",
+        "summary": "Filed directly with the statutory Ombudsperson, outside your institution.",
+        "filed_with": "The Federal Ombudsperson (FOSPAH). A complaint may be filed online, by post, or in person.",
+        "steps": [
+          "You may file directly with the Ombudsperson instead of your institution's Inquiry Committee. You do not have to use the internal route first.",
+          "Within 3 days of receiving the complaint, the Ombudsperson issues a written show cause notice to the accused.",
+          "The accused has 5 days from receiving that notice to submit a written defence. If they do not, the Ombudsperson may proceed ex parte.",
+          "The Ombudsperson conducts the inquiry under the Act and the rules, and may require the organisation to produce information or documents.",
+          "Both parties may represent themselves before the Ombudsperson.",
+          "The Ombudsperson records the decision and informs both parties and the management of the organisation."
+        ],
+        "timeline": "Statutory: show cause notice within 3 days, defence within 5 days. Amended versions of the Act require the Ombudsperson to decide a case or appeal within 90 days."
+      }
+    ],
+    "choice_note": "You can choose either route. The Act says a complainant has the option to prefer a complaint either to the Ombudsperson or to the Inquiry Committee. The difference is where it is filed: the internal route is handled through your institution, and the Ombudsperson route is filed directly with the statutory Ombudsperson, which FOSPAH describes as an autonomous quasi-judicial body.",
+    "jurisdiction": "Pakistan",
+    "jurisdiction_note": "This is the procedure under the Protection Against Harassment of Women at the Workplace Act, 2010, as amended in 2022. It applies in Pakistan. The 2022 Amendment extended \"employee\" to include students and \"workplace\" to include educational institutions. Other countries have different forums and different deadlines.",
+    "source_url": "https://pakistancode.gov.pk/pdffiles/administratorc22e81f4add9ea3dc023086953ca2b4f.pdf",
+    "source_name": "Pakistan Code - Protection against Harassment of Women at the Workplace Act, 2010",
+    "source_date": "2026-09-21",
+    "additional_sources": [
+      {
+        "name": "FOSPAH - Laws and Rules Book (consolidated Act and rules)",
+        "url": "https://www.fospah.gov.pk/SiteImage/Misc/FOSPAH%20Laws%20and%20Rules.pdf"
+      },
+      {
+        "name": "FOSPAH - official complaints portal",
+        "url": "https://complaints.fospah.gov.pk/"
+      }
+    ],
+    "provenance": "verified"
+  },
+  {
+    "id": "pk-lhr-s04",
+    "problem_key": "academic_dispute",
+    "display_name": "I have a problem with a grade or an academic decision",
+    "country": "Pakistan",
+    "city": "Lahore",
+    "campus": "Mira Demo Campus",
+    "office_name": "Departmental office, then the relevant faculty office",
+    "office_contact": "Your department's main office",
+    "documents": [
+      "Student card",
+      "The marked script, result, or the decision you are querying",
+      "Any correspondence about it"
+    ],
+    "steps": [
+      "Ask your department office what the formal recheck or appeal route is - it differs by faculty.",
+      "Request the process in writing, including the deadline, before you raise the substance.",
+      "Speak to your academic advisor if you have one; they can tell you whether the query is worth pursuing.",
+      "Submit within the stated window. Late appeals are usually refused on timing alone."
+    ],
+    "timeline": "Appeal windows are short and set per faculty. Confirm the deadline first.",
+    "jurisdiction": "Pakistan",
+    "jurisdiction_note": "Processes are institution- and faculty-specific rather than set by national statute, so this route must be confirmed locally for any given campus.",
+    "source_url": null,
+    "source_name": "",
+    "source_date": "2026-09-20",
+    "provenance": "unverified"
+  },
+  {
+    "id": "pk-lhr-s05",
+    "problem_key": "hostel_problem",
+    "display_name": "I have a problem in the hostel",
+    "country": "Pakistan",
+    "city": "Lahore",
+    "campus": "Mira Demo Campus",
+    "office_name": "Directorate of Student Affairs / Hostel Warden",
+    "office_contact": "Hostel warden's office, or Room 12 in the Student Affairs Office",
+    "documents": [
+      "Student card",
+      "Room allocation slip or hostel receipt"
+    ],
+    "steps": [
+      "Raise maintenance issues with the warden first and ask for a complaint reference.",
+      "For anything involving safety or another resident, ask to see the warden in person rather than reporting it in a group.",
+      "If the warden does not resolve it, take it to the Directorate of Student Affairs.",
+      "Keep a written note of dates and who you spoke to."
+    ],
+    "timeline": "Varies. Ask for a reference number so you can follow up.",
+    "jurisdiction": "Pakistan",
+    "jurisdiction_note": "Hostel governance is institution-specific.",
+    "source_url": null,
+    "source_name": "",
+    "source_date": "2026-09-20",
+    "provenance": "unverified"
+  },
+  {
+    "id": "pk-lhr-s06",
+    "problem_key": "health_concern",
+    "display_name": "I need health or counselling support",
+    "country": "Pakistan",
+    "city": "Lahore",
+    "campus": "Mira Demo Campus",
+    "office_name": "Campus Medical Centre / Student Counselling Service",
+    "office_contact": "Medical Centre, Administration Block. Counselling: Room 18, Student Affairs Office.",
+    "documents": [
+      "Student card"
+    ],
+    "steps": [
+      "Walk in to the Medical Centre for anything urgent - no appointment needed during opening hours.",
+      "For counselling, book an appointment; walk-in slots are limited.",
+      "Counselling is confidential and is not recorded on your academic file.",
+      "For women's health specifically, the Women's Health Clinic runs separate hours with female staff."
+    ],
+    "timeline": "Medical Centre: walk-in during opening hours. Counselling: appointment usually within a week.",
+    "jurisdiction": "Pakistan",
+    "jurisdiction_note": "Provision varies widely between institutions.",
+    "source_url": null,
+    "source_name": "",
+    "source_date": "2026-09-20",
+    "provenance": "unverified"
+  },
+
+  {
+    "id": "uk-mcr-s01",
+    "problem_key": "cant_pay_fees",
+    "display_name": "I can't pay my tuition or living costs",
+    "country": "United Kingdom",
+    "city": "Manchester",
+    "campus": "Mira Demo Campus",
+    "office_name": "Student Money Advice Team",
+    "office_contact": "Student Hub, ground floor",
+    "documents": [
+      "Student ID",
+      "Evidence of income and outgoings",
+      "Bank statements for the last three months"
+    ],
+    "steps": [
+      "Contact the Student Money Advice Team before the deadline passes - options narrow once you are in arrears.",
+      "Ask about the university hardship fund, which is separate from your student loan.",
+      "Ask about payment plans if a lump sum is the problem rather than total affordability.",
+      "Check whether you are eligible for any bursary you have not claimed."
+    ],
+    "timeline": "Hardship fund decisions typically take 2-4 weeks.",
+    "jurisdiction": "United Kingdom",
+    "jurisdiction_note": "In the UK, support typically comes through a university hardship fund plus the Student Loans Company, and is separate from academic fees policy.",
+    "source_url": null,
+    "source_name": "",
+    "source_date": "2026-09-20",
+    "provenance": "unverified"
+  },
+  {
+    "id": "uk-mcr-s02",
+    "problem_key": "harassment_concern",
+    "display_name": "I want to report harassment or sexual misconduct",
+    "country": "United Kingdom",
+    "city": "Manchester",
+    "campus": "Mira Demo Campus",
+    "office_name": "Report and Support",
+    "office_contact": "Online reporting form, or a named contact in the Student Hub",
+    "documents": [
+      "Any evidence you choose to provide"
+    ],
+    "steps": [
+      "You do not need to prepare anything to make a report. Reporting and providing evidence are separate steps.",
+      "You can report anonymously or named - anonymous reports are still recorded and acted on where possible.",
+      "You can report to the university, to the police, or both; they are separate routes.",
+      "Independent advice is available from the Students' Union, separately from the university.",
+      "Ask what support is available whether or not you choose to pursue a formal process."
+    ],
+    "timeline": "Varies by route. Ask what to expect at the point of reporting.",
+    "jurisdiction": "United Kingdom",
+    "jurisdiction_note": "UK universities typically maintain a Report and Support service, and are regulated on how they handle student complaints and misconduct. Routes and terminology differ per institution.",
+    "source_url": null,
+    "source_name": "",
+    "source_date": "2026-09-20",
+    "provenance": "unverified"
+  },
+  {
+    "id": "uk-mcr-s03",
+    "problem_key": "academic_dispute",
+    "display_name": "I want to appeal an academic decision",
+    "country": "United Kingdom",
+    "city": "Manchester",
+    "campus": "Mira Demo Campus",
+    "office_name": "Academic Appeals Office",
+    "office_contact": "Student Hub, or via your faculty office",
+    "documents": [
+      "Student ID",
+      "The decision letter or result you are appealing",
+      "Any supporting evidence"
+    ],
+    "steps": [
+      "Check the deadline first - UK appeal windows are typically short and strictly applied.",
+      "Note that appeals are usually limited to specific grounds such as procedural error or mitigating circumstances, not disagreement with academic judgement.",
+      "Speak to your personal tutor or the Students' Union advice centre before submitting.",
+      "Submit in writing and keep a copy."
+    ],
+    "timeline": "Strict, short windows. Confirm the exact deadline before doing anything else.",
+    "jurisdiction": "United Kingdom",
+    "jurisdiction_note": "UK appeal grounds are formally limited and differ from a general complaint. The distinction matters and is institution-specific.",
+    "source_url": null,
+    "source_name": "",
+    "source_date": "2026-09-20",
+    "provenance": "unverified"
+  }
+]

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+
+{% block title %}I need something — Mira{% endblock %}
+
+{% block content %}
+  <p class="crumb"><a class="link" href="/">&#8592; Back</a></p>
+
+  <h1 class="page-title">What do you need?</h1>
+  <p class="page-sub">
+    {% if location %}Places at {{ location.campus }}, {{ location.city }}.{% endif %}
+  </p>
+
+  {{ m.demo_banner(is_demo) }}
+
+  {% if tiles %}
+    <ul class="tile-grid">
+      {% for tile in tiles %}
+        <li>
+          <a class="tile" href="/needs/{{ tile.key }}">
+            <span class="tile-icon" aria-hidden="true">{{ tile.icon }}</span>
+            <span class="tile-label">{{ tile.label }}</span>
+            <span class="tile-count">{{ tile.count }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="empty">
+      <p class="empty-title">Nothing listed here yet</p>
+      <p>
+        Mira has no essentials recorded for this location. That is a gap in our data, not
+        a statement that these things do not exist.
+      </p>
+    </div>
+  {% endif %}
+
+  {% if gaps %}
+    {#
+      Naming the gaps matters. If a category is simply absent, a student cannot tell
+      whether the campus lacks the facility or Mira lacks the record -- and the second is
+      the far more likely explanation. Saying so is more honest and more useful than
+      hiding the category.
+    #}
+    <section class="gaps">
+      <h2 class="gaps-title">Mira has no data yet for</h2>
+      <ul class="gaps-list">
+        {% for label in gaps %}<li>{{ label }}</li>{% endfor %}
+      </ul>
+      <p class="meta">
+        A missing category means Mira has no record, not that the campus has no such place.
+        The <a class="link" href="/about">How Mira works</a> page explains what Mira will
+        and will not record, and why.
+      </p>
+    </section>
+  {% endif %}
+
+  <p class="fallback">
+    Still not finding it? <a class="link" href="/help">Tell Mira what you need</a> and it
+    will point you at the right office.
+  </p>
+{% endblock %}

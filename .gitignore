@@ -1,0 +1,35 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Tailwind build tooling. static/css/styles.css IS committed on purpose, so the deployed
+# build needs no Node step.
+node_modules/
+
+# Vercel
+.vercel/
+
+# Editor / tooling state. `settings.local.json` holds machine-local permission grants —
+# absolute paths and one-off approvals — so it is not portable and not project source.
+.claude/settings.local.json
+
+# Development notes — intake and option-generation history. Kept on disk, deliberately NOT
+# part of the submitted repository: they specify directions Mira does not pursue (an
+# accessibility auditor, among others) in the present tense, so a reviewer could reasonably
+# conclude we did not know which product we built. The load-bearing content was lifted into
+# PROJECT_TRACKER.md §13 and §16 first. See §16 for why, and for what was preserved.
+notes/
+
+# Local secrets
+.env
+.env.*
+
+# Scratch space for source verification — downloaded PDFs and extracted text. Never
+# committed: these are third-party documents used to check a citation, not project files.
+.tmp-verify/
+
+# OS noise
+Thumbs.db
+.DS_Store

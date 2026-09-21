@@ -1,0 +1,13 @@
+{
+  "name": "mira",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Stylesheet build tooling for Mira. This is not a Node application: it exists only to compile Tailwind to a static file, which is committed so the deployed build needs no Node step at all.",
+  "scripts": {
+    "build:css": "tailwindcss -i ./static/css/input.css -o ./static/css/styles.css --minify",
+    "watch:css": "tailwindcss -i ./static/css/input.css -o ./static/css/styles.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

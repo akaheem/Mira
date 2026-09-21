@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+
+{% block title %}Mira — What do you need right now?{% endblock %}
+
+{% block content %}
+  {{ m.demo_banner(is_demo) }}
+
+  <section class="hero">
+    <h1 class="hero-title">What do you need right now?</h1>
+    <p class="hero-sub">
+      {% if location %}
+        You are looking at <strong>{{ location.campus }}</strong>, {{ location.city }}.
+      {% endif %}
+      No account needed.
+    </p>
+  </section>
+
+  <nav class="choices" aria-label="Choose what you need">
+
+    <a class="choice" href="/needs">
+      <span class="choice-icon" aria-hidden="true">&#9679;</span>
+      <span class="choice-body">
+        <span class="choice-title">I need something</span>
+        <span class="choice-desc">
+          A washroom, menstrual products, water, first aid, food, a quiet place to study.
+        </span>
+        {% if resource_count %}
+          <span class="choice-count">{{ resource_count }} place{{ '' if resource_count == 1 else 's' }} listed here</span>
+        {% endif %}
+      </span>
+    </a>
+
+    <a class="choice" href="/help">
+      <span class="choice-icon" aria-hidden="true">&#9679;</span>
+      <span class="choice-body">
+        <span class="choice-title">I need help with a problem</span>
+        <span class="choice-desc">
+          Fees, a scholarship, a harassment concern, a grade dispute, hostel, health.
+          Describe it in your own words and Mira finds the right process.
+        </span>
+        {% if support_count %}
+          <span class="choice-count">{{ support_count }} process{{ '' if support_count == 1 else 'es' }} documented here</span>
+        {% endif %}
+      </span>
+    </a>
+
+    <a class="choice" href="/journey">
+      <span class="choice-icon" aria-hidden="true">&#9679;</span>
+      <span class="choice-body">
+        <span class="choice-title">Get me there</span>
+        <span class="choice-desc">
+          How to reach campus, what it costs, how long it takes, and whether women's
+          transport is running when you travel.
+        </span>
+        {% if area_count %}
+          <span class="choice-count">{{ area_count }} starting point{{ '' if area_count == 1 else 's' }}</span>
+        {% endif %}
+      </span>
+    </a>
+
+  </nav>
+
+  <section class="principle">
+    <h2 class="principle-title">How Mira is different</h2>
+    <p>
+      Every fact here shows <strong>where it came from</strong> and <strong>when it was
+      last checked</strong>. Where Mira does not have a source, it says so on the card
+      instead of quietly filling the gap. An unverified answer you can see is more useful
+      than a confident one you cannot check.
+    </p>
+  </section>
+{% endblock %}

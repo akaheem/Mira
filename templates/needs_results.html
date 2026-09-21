@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+
+{% block title %}{{ category_label }} — Mira{% endblock %}
+
+{% block content %}
+  <p class="crumb"><a class="link" href="/needs">&#8592; All needs</a></p>
+
+  <h1 class="page-title">{{ category_label }}</h1>
+  <p class="page-sub">
+    {% if location %}{{ location.campus }}, {{ location.city }}.{% endif %}
+    {{ results|length }} place{{ '' if results|length == 1 else 's' }} listed.
+  </p>
+
+  {{ m.demo_banner(is_demo) }}
+
+  {% if results %}
+    <ul class="card-list">
+      {% for place in results %}
+        <li class="card">
+          <div class="card-head">
+            <h2 class="card-title">
+              <span aria-hidden="true">{{ place.icon }}</span> {{ place.name }}
+            </h2>
+            <div class="chips">
+              {{ m.provenance(place) }}
+              {{ m.jurisdiction_tag(place) }}
+              {{ m.stale_badge(place) }}
+              {{ m.open_state(place) }}
+            </div>
+          </div>
+
+          <dl class="facts">
+            {% if place.building %}
+              <div class="fact"><dt>Building</dt><dd>{{ place.building }}</dd></div>
+            {% endif %}
+            {% if place.landmark %}
+              <div class="fact"><dt>Where exactly</dt><dd>{{ place.landmark }}</dd></div>
+            {% endif %}
+            {% if place.hours %}
+              <div class="fact"><dt>Hours</dt><dd>{{ place.hours }}</dd></div>
+            {% endif %}
+            {% if place.price %}
+              <div class="fact"><dt>Cost</dt><dd>{{ place.price }}</dd></div>
+            {% endif %}
+          </dl>
+
+          {% if place.women_only or place.wheelchair_accessible %}
+            <div class="chips">
+              {% if place.women_only %}
+                <span class="chip chip-quiet">Women only</span>
+              {% endif %}
+              {% if place.wheelchair_accessible %}
+                <span class="chip chip-quiet">Step-free access</span>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if place.notes %}
+            <p class="card-note">{{ place.notes }}</p>
+          {% endif %}
+
+          <div class="card-foot">
+            {{ m.provenance_note(place) }}
+            {{ m.freshness(place) }}
+            {{ m.sources(place) }}
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="empty">
+      <p class="empty-title">Nothing recorded for {{ category_label|lower }} here</p>
+      <p>
+        Mira has no entry for this at {{ location.campus if location else 'this location' }}.
+        That is a gap in our records rather than a statement that it does not exist.
+      </p>
+      <p><a class="link" href="/help">Ask Mira where to go instead</a></p>
+    </div>
+  {% endif %}
+{% endblock %}

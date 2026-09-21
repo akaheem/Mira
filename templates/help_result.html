@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+
+{% block title %}{{ process.display_name if process else 'Help' }} — Mira{% endblock %}
+
+{% block content %}
+  <p class="crumb"><a class="link" href="/help">&#8592; Ask about something else</a></p>
+
+  {% if urgent %}
+    <div class="notice notice-urgent" role="alert">
+      <p class="notice-title">If you are in immediate danger</p>
+      <p>
+        Contact your local emergency number or campus security now. Mira is a guide to
+        processes, not an emergency service.
+      </p>
+    </div>
+  {% endif %}
+
+  {% if process %}
+    <h1 class="page-title">{{ process.display_name }}</h1>
+
+    {% if submitted %}
+      <p class="echo">You described: &ldquo;{{ submitted }}&rdquo;</p>
+    {% endif %}
+
+    {% if method != 'list' %}
+      {#
+        Honesty about the match itself. Mira found this by looking for the words you used,
+        which is a guess -- a good one, but a guess. Saying so costs nothing and stops a
+        wrong match from being acted on as though it were confirmed.
+
+        Skipped when the student picked the topic from the list, because then they did the
+        matching and Mira is only showing what they chose.
+      #}
+      <p class="match-note">
+        Mira matched this from the words you used. If it is not what you meant,
+        <a class="link" href="/help">try different words</a> or pick from the list there.
+      </p>
+    {% endif %}
+
+    <div class="chips chips-lead">
+      {{ m.provenance(process) }}
+      {{ m.jurisdiction_tag(process) }}
+    </div>
+
+    {#
+      The jurisdiction block. A jurisdiction-specific legal process shown without its
+      jurisdiction reads as a universal rule, which is the one failure mode this flow
+      cannot afford. Rendered before the procedure, not after it.
+    #}
+    {% if process.jurisdiction and process.jurisdiction != "demo environment" %}
+      <div class="notice notice-jurisdiction" role="note">
+        <p class="notice-title">Applies in {{ process.jurisdiction }}</p>
+        {% if process.jurisdiction_note %}
+          <p>{{ process.jurisdiction_note }}</p>
+        {% endif %}
+      </div>
+    {% elif process.jurisdiction_note %}
+      <section class="block block-note">
+        <h2 class="section-title">Worth knowing</h2>
+        <p>{{ process.jurisdiction_note }}</p>
+      </section>
+    {% endif %}
+
+    {% if process.office_name %}
+      <section class="block">
+        <h2 class="section-title">Who to contact</h2>
+        <p class="office">{{ process.office_name }}</p>
+        {% if process.office_contact %}
+          <p class="office-contact">{{ process.office_contact }}</p>
+        {% endif %}
+      </section>
+    {% endif %}
+
+    {% if process.documents %}
+      <section class="block">
+        <h2 class="section-title">What to bring</h2>
+        <ul class="checklist">
+          {% for item in process.documents %}<li>{{ item }}</li>{% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+
+    {#
+      Parallel routes. Some processes genuinely offer a choice -- under the Pakistani
+      harassment statute a complainant may file with the institution's Inquiry Committee
+      OR directly with the Ombudsperson. Flattening those into one numbered list would
+      misrepresent the law, and merging their different deadlines into a single "appeal
+      by" date would be straightforwardly wrong.
+
+      The routes are presented side by side with no ranking language. Comparing them on
+      "independence", "speed", or "what each can order" would cross from reporting the law
+      into interpreting it, and would imply one route is inherently better. The choice
+      stays with the reader.
+    #}
+    {% if process.options %}
+      {% if process.choice_note %}
+        <p class="choice-note">{{ process.choice_note }}</p>
+      {% endif %}
+
+      <div class="routes">
+        {% for option in process.options %}
+          <section class="route">
+            <h2 class="route-title">{{ option.name }}</h2>
+            {% if option.summary %}
+              <p class="route-summary">{{ option.summary }}</p>
+            {% endif %}
+
+            {% if option.filed_with %}
+              <p class="route-filed"><span class="route-label">Filed with</span> {{ option.filed_with }}</p>
+            {% endif %}
+
+            {% if option.steps %}
+              <ol class="steps">
+                {% for step in option.steps %}<li>{{ step }}</li>{% endfor %}
+              </ol>
+            {% endif %}
+
+            {% if option.timeline %}
+              <p class="route-timeline"><span class="route-label">Timeline</span> {{ option.timeline }}</p>
+            {% endif %}
+
+            {% if option.documents %}
+              <p class="route-label">Bring</p>
+              <ul class="checklist">
+                {% for item in option.documents %}<li>{{ item }}</li>{% endfor %}
+              </ul>
+            {% endif %}
+          </section>
+        {% endfor %}
+      </div>
+    {% elif process.steps %}
+      <section class="block">
+        <h2 class="section-title">What happens, in order</h2>
+        <ol class="steps">
+          {% for step in process.steps %}<li>{{ step }}</li>{% endfor %}
+        </ol>
+      </section>
+
+      {% if process.timeline %}
+        <section class="block">
+          <h2 class="section-title">How long it should take</h2>
+          <p>{{ process.timeline }}</p>
+        </section>
+      {% endif %}
+    {% endif %}
+
+    <section class="block">
+      <h2 class="section-title">Where this came from</h2>
+      {{ m.provenance_note(process) }}
+      {{ m.sources(process) }}
+      {% if not process.source_url %}
+        <p class="meta">
+          Mira has no source attached to this process yet, so treat the steps as a lead to
+          confirm with the office rather than a settled fact.
+        </p>
+      {% endif %}
+    </section>
+
+    <p class="fallback">
+      If this is not the right place, the office above can still redirect you. Mira shows
+      the process; the decision about what to do stays with you.
+    </p>
+  {% else %}
+    <div class="empty">
+      <p class="empty-title">Nothing documented for that yet</p>
+      <p>Mira has no process recorded for this at the selected location.</p>
+      <p><a class="link" href="/help">Try another description</a></p>
+    </div>
+  {% endif %}
+{% endblock %}

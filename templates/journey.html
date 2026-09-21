@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+
+{% block title %}Get me there — Mira{% endblock %}
+
+{% block content %}
+  <p class="crumb"><a class="link" href="/">&#8592; Back</a></p>
+
+  <h1 class="page-title">Get me there</h1>
+  <p class="page-sub">
+    Where are you starting from? Mira will show what the trip costs, how long it takes,
+    and whether women's transport runs at that hour.
+  </p>
+
+  {{ m.demo_banner(is_demo) }}
+
+  {% if areas %}
+    <form class="form" method="get" action="/journey/plan">
+      <label class="label" for="area">Starting from</label>
+      <select class="select" id="area" name="area" required>
+        <option value="">Choose an area</option>
+        {% for area in areas %}
+          <option value="{{ area }}">{{ area }}</option>
+        {% endfor %}
+      </select>
+
+      {#
+        No "arriving by" field here, deliberately. One existed and it promised that the time
+        would be "used to show you the last departure that still gets you there in time" --
+        but the route never computed anything with it, it only echoed the value back. Mira
+        has no timetable data: it holds a last-departure time and a duration range, which is
+        not enough to tell anyone which departure to take.
+
+        A field that appears to plan your timing and does not is worse than no field. The
+        failure mode is a student trusting a computed "leave by" and missing the last bus.
+        Restoring it means implementing it against real timetable data, not re-adding the
+        input.
+      #}
+
+      <button class="btn btn-primary" type="submit">Show me the trip</button>
+    </form>
+
+    <section class="principle">
+      <h2 class="principle-title">What Mira will and will not tell you</h2>
+      <p>
+        Mira lists properties it can point at a source for: the modes, the number of
+        transfers, how far you walk at the end, which entrance you arrive at, and the hours
+        women's transport runs. Where it has a fare it can characterise, it shows the
+        figure and says how confident it is; where it cannot, it shows no figure at all
+        rather than a number it cannot stand behind.
+      </p>
+      <p>
+        It does <strong>not</strong> give a route a safety rating &mdash; it has no way to
+        verify one, and it does not know your neighbourhood, the time of day, or what you
+        are comfortable with.
+      </p>
+    </section>
+  {% else %}
+    <div class="empty">
+      <p class="empty-title">No routes recorded here yet</p>
+      <p>
+        Mira has no journey data for this location. That is a gap in our records rather
+        than a statement about the transport available.
+      </p>
+    </div>
+  {% endif %}
+{% endblock %}

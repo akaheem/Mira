@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+
+{% block title %}How Mira works{% endblock %}
+
+{% block content %}
+  <p class="crumb"><a class="link" href="/">&#8592; Back</a></p>
+
+  <h1 class="page-title">How Mira works, and where the data comes from</h1>
+
+  <section class="block">
+    <h2 class="section-title">The problem Mira is aimed at</h2>
+    <p>
+      Support for students usually exists. It is just hard to find, hard to trust, and
+      scattered across noticeboards, handbooks and word of mouth. The student who most
+      needs the fee waiver is often the one with the least time to work out which office
+      to visit and what to bring. That gap falls hardest on students who already have the
+      least margin &mdash; which is why it is a sustainable-development problem and not
+      just a design one.
+    </p>
+  </section>
+
+  <section class="block">
+    <h2 class="section-title">Mira answers three questions</h2>
+    <dl class="facts facts-stacked">
+      <div class="fact">
+        <dt>I need something</dt>
+        <dd>Which nearby place has what you need, and is it open right now.</dd>
+      </div>
+      <div class="fact">
+        <dt>I need help with a problem</dt>
+        <dd>Which office handles it, what to bring, what happens in what order, and how long it should take.</dd>
+      </div>
+      <div class="fact">
+        <dt>Get me there</dt>
+        <dd>What the trip costs, how long it takes, and whether women's transport runs when you travel.</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="block">
+    <h2 class="section-title">Three kinds of entry, and they are not interchangeable</h2>
+    <p>
+      This is the part that matters most, so it is stated plainly rather than left to a
+      badge. Every entry in Mira carries one of three states, and the state is a field in
+      the data &mdash; not something the interface guesses from whether a link happens to
+      be present.
+    </p>
+
+    <ul class="states">
+      <li class="state">
+        <span class="chip chip-verified"><span class="chip-mark" aria-hidden="true">&#10003;</span> Verified</span>
+        <p>
+          A real-world claim, and the cited source supports <em>this specific claim</em>,
+          within the jurisdiction stated and the relevant time period. A source that
+          proves something related is not enough.
+        </p>
+      </li>
+      <li class="state">
+        <span class="chip chip-illustrative"><span class="chip-mark" aria-hidden="true">&#9671;</span> Illustrative</span>
+        <p>
+          Intentionally fictional information, created to demonstrate the product. It
+          describes no real place and no real service, and is never presented as a
+          real-world fact.
+        </p>
+      </li>
+      <li class="state">
+        <span class="chip chip-unverified"><span class="chip-mark" aria-hidden="true">!</span> Not yet verified</span>
+        <p>
+          A real-world claim for which Mira does not currently have adequate evidence.
+          It is not presented as established fact, and it is not used as the basis for any
+          claim about impact.
+        </p>
+      </li>
+    </ul>
+
+    <p>
+      A record is only marked <strong>Verified</strong> when the declared state and a real
+      citation agree. If a record claims to be verified and carries no source, Mira shows
+      it as <strong>Not yet verified</strong> and reports the inconsistency: the safe
+      direction to be wrong in is under-claiming, never over-claiming.
+    </p>
+
+    <p>
+      Where a fact applies only to one country, it is tagged with that country. Provenance
+      and jurisdiction are separate fields on purpose: a verified legal process in one
+      country must never read as a universal rule for students everywhere.
+    </p>
+  </section>
+
+  <section class="block">
+    <h2 class="section-title">What is in this build</h2>
+    <p>
+      These are the real counts from the data behind this page, not an estimate:
+    </p>
+    <table class="counts">
+      <caption class="meta">Records at the selected location, by state</caption>
+      <thead>
+        <tr><th scope="col">State</th><th scope="col">Records</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">
+            <span class="chip chip-verified"><span class="chip-mark" aria-hidden="true">&#10003;</span> Verified</span>
+          </th>
+          <td>{{ counts.get('verified', 0) }}</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <span class="chip chip-illustrative"><span class="chip-mark" aria-hidden="true">&#9671;</span> Illustrative</span>
+          </th>
+          <td>{{ counts.get('illustrative', 0) }}</td>
+        </tr>
+        <tr>
+          <th scope="row">
+            <span class="chip chip-unverified"><span class="chip-mark" aria-hidden="true">!</span> Not yet verified</span>
+          </th>
+          <td>{{ counts.get('unverified', 0) }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      Publishing these numbers is deliberate. A proportion tells you exactly how much of
+      this build you can rely on, which is more useful than a paragraph of reassurance.
+    </p>
+  </section>
+
+  <section class="block">
+    <h2 class="section-title">What Mira deliberately does not do</h2>
+    <ul class="checklist">
+      <li>It does not rate a route as safe or unsafe. It cannot verify that, and a score would hide the fact.</li>
+      <li>It does not invent a process. Answers come from a fixed set of documented processes, and the matcher only ever chooses between them.</li>
+      <li>It does not promote a fictional entry to Verified because something similar exists in the real world. A real source establishes that a service exists <em>there</em>, not that it exists at the place shown.</li>
+      <li>It does not replace an office or an adviser. It gets you to the right door with the right papers.</li>
+    </ul>
+  </section>
+
+  <section class="block block-note">
+    <h2 class="section-title">What happens to what you type</h2>
+    <p>
+      Stated as precisely as the implementation allows, because a privacy claim broader
+      than the system can keep is worse than no claim at all.
+    </p>
+    <ul class="checklist">
+      <li>Mira requires <strong>no account</strong>, and there is no login.</li>
+      <li>
+        What you type is sent once, over HTTPS, to select a process. It is matched by this
+        application's own code against a fixed list of topics. It is <strong>never sent to
+        an AI service</strong> or any third party.
+      </li>
+      <li>
+        It is <strong>not written to any store Mira controls</strong> &mdash; no database,
+        no file, no cache keyed on it. Once the response is rendered, the server holds no
+        copy.
+      </li>
+      <li>
+        The application emits <strong>no log line</strong> containing it, and no analytics
+        event. It is submitted by POST rather than in the URL, so it does not land in
+        browser history or in a proxy's access log.
+      </li>
+      <li>
+        <strong>The limit of that promise:</strong> Mira runs on a hosting platform that
+        keeps its own standard request logs, which this project does not control. So Mira
+        does not claim that nothing is recorded anywhere &mdash; only that Mira itself
+        stores nothing, and that no copy is kept beyond the response you are reading.
+      </li>
+      <li>
+        Journey sharing works the opposite way around: the summary is assembled in your own
+        browser and handed to your phone's share sheet. It is never sent to Mira at all.
+      </li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <h2 class="section-title">How it is built</h2>
+    <p>
+      A small FastAPI application rendering server-side templates, deployed as a serverless
+      function. Data lives in plain files behind a single repository interface, so moving to
+      a database later is a change to one module rather than the whole application. It is
+      built mobile-first, because the student who needs it is holding a phone.
+    </p>
+    <p>
+      The application is location-parameterised: every record carries its own country, city
+      and campus, and a new location is new data rows rather than new code. The two
+      locations included here are a demonstration of that, not the intended scope.
+    </p>
+  </section>
+
+  <section class="block">
+    <h2 class="section-title">Which SDG targets this maps to</h2>
+    <p>
+      Target-level, not theme-level. Mira does not claim to have measured impact against
+      any of these; these are the targets the problem itself sits inside.
+    </p>
+    <dl class="facts facts-stacked">
+      <div class="fact">
+        <dt>11.2</dt>
+        <dd>Safe, affordable and accessible transport, &ldquo;with special attention to the needs of those in vulnerable situations, women, children&hellip;&rdquo; &mdash; the journey flow.</dd>
+      </div>
+      <div class="fact">
+        <dt>5.2</dt>
+        <dd>Eliminating all forms of violence against all women and girls &mdash; the harassment process, which is why it is sourced to the statute that governs it.</dd>
+      </div>
+      <div class="fact">
+        <dt>4.5</dt>
+        <dd>Eliminating gender disparities in education &mdash; the awareness gap that keeps support unclaimed falls hardest on those with the least margin.</dd>
+      </div>
+      <div class="fact">
+        <dt>10.2</dt>
+        <dd>Promoting social and economic inclusion irrespective of sex or economic status &mdash; the fee, scholarship and food routes.</dd>
+      </div>
+      <div class="fact">
+        <dt>4.3</dt>
+        <dd>Equal access to affordable quality tertiary education &mdash; the overall aim.</dd>
+      </div>
+    </dl>
+  </section>
+
+  {% if warnings %}
+    <section class="block block-warn">
+      <h2 class="section-title">Data problems found in this build</h2>
+      <p>
+        Mira checks its own data on load and reports inconsistencies rather than silently
+        rendering around them. These records declare a state their citation does not
+        support, and are shown as Not yet verified until that is fixed.
+      </p>
+      <ul class="checklist">
+        {% for warning in warnings %}<li>{{ warning }}</li>{% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+{% endblock %}

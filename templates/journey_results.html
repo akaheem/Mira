@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+
+{% block title %}{{ area or 'Journey' }} to campus — Mira{% endblock %}
+
+{% block content %}
+  <p class="crumb"><a class="link" href="/journey">&#8592; Change starting point</a></p>
+
+  <h1 class="page-title">Getting to campus from {{ area or 'your area' }}</h1>
+  <p class="page-sub">
+    {% if location %}{{ location.campus }}, {{ location.city }}.{% endif %}
+  </p>
+
+  {{ m.demo_banner(is_demo) }}
+
+  {% if routes %}
+    <ul class="card-list">
+      {% for route in routes %}
+        <li class="card">
+          <div class="card-head">
+            <h2 class="card-title">{{ route.modes|join(' → ') }}</h2>
+            <div class="chips">
+              {{ m.provenance(route) }}
+              {{ m.jurisdiction_tag(route) }}
+              {% if route.arrives_after_dark %}
+                <span class="chip chip-dark">
+                  <span class="chip-mark" aria-hidden="true">&#9789;</span> Last departure is after dark
+                </span>
+              {% endif %}
+            </div>
+          </div>
+
+          <dl class="facts">
+            <div class="fact"><dt>Fare</dt><dd>{{ m.fare(route) }}</dd></div>
+            <div class="fact"><dt>Takes</dt><dd>{{ route.duration_label }}</dd></div>
+            <div class="fact">
+              <dt>Changes</dt>
+              <dd>{{ route.transfers }} change{{ '' if route.transfers == 1 else 's' }}</dd>
+            </div>
+            {% if route.final_walk_m %}
+              <div class="fact">
+                <dt>Walk at the end</dt>
+                <dd>about {{ route.final_walk_m }} m</dd>
+              </div>
+            {% endif %}
+            {% if route.entry_point %}
+              <div class="fact"><dt>Arrive at</dt><dd>{{ route.entry_point }}</dd></div>
+            {% endif %}
+            {% if route.last_departure %}
+              <div class="fact"><dt>Last departure</dt><dd>{{ route.last_departure }}</dd></div>
+            {% endif %}
+          </dl>
+
+          <div class="chips">
+            {% if route.womens_transport %}
+              <span class="chip chip-open">
+                Women's transport available{% if route.womens_hours %} &middot; {{ route.womens_hours }}{% endif %}
+              </span>
+            {% else %}
+              <span class="chip chip-quiet">No women-only service recorded on this route</span>
+            {% endif %}
+          </div>
+
+          {% if route.note %}
+            <p class="card-note">{{ route.note }}</p>
+          {% endif %}
+
+          {{ m.conditions(route) }}
+
+          <div class="card-foot">
+            {{ m.provenance_note(route) }}
+            {{ m.sources(route) }}
+
+            {#
+              Journey sharing, client-side only. The button ships `hidden` and is revealed
+              by JS, so with JavaScript off the page is unchanged rather than offering a
+              control that does nothing.
+
+              Every value is data Mira already displays. Nothing the student typed reaches
+              this element, and nothing leaves the browser: the summary is assembled in
+              the page and handed to the OS share sheet or the clipboard.
+            #}
+            <button class="btn btn-secondary share-btn" type="button" hidden
+              data-share-journey
+              data-share-to="{{ location.campus if location else 'campus' }}"
+              data-share-from="{{ area }}"
+              data-share-modes="{{ route.modes|join(' then ') }}"
+              data-share-duration="{{ route.duration_label }}"
+              data-share-fare="{{ route.fare_label }}"
+              data-share-fare-note="{{ route.fare_confidence_label }}"
+              data-share-last="{{ route.last_departure }}"
+              data-share-walk="{{ route.final_walk_m }}"
+              {% if route.arrives_after_dark %}data-share-dark="1"{% endif %}>
+              Share this journey
+            </button>
+            <p class="meta" data-share-status role="status"></p>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <div class="empty">
+      <p class="empty-title">No routes recorded from {{ area or 'there' }}</p>
+      <p>
+        Mira has no journey data for this starting point. That is a gap in our records
+        rather than a statement that no transport exists.
+      </p>
+    </div>
+  {% endif %}
+
+  <section class="principle">
+    <h2 class="principle-title">Why there is no safety score here</h2>
+    <p>
+      A number would be easier to read than this list, and that is exactly the problem.
+      Mira cannot verify that a route is safe, and a score would hide that. What it can do
+      is give you the properties it has a source for &mdash; the fare, the hour of the last
+      departure, whether women's transport is running, how far you walk at the end &mdash;
+      and let you decide, because you know the context and Mira does not.
+    </p>
+    <p>
+      <strong>Mira has no timetable.</strong> It can tell you when the last recorded
+      departure is, but not which departure to take or when the next one leaves. So it does
+      not compute a &ldquo;leave by&rdquo; time: that would need a schedule it does not
+      have, and being wrong about it could leave you stranded. Check the times above against
+      your own journey.
+    </p>
+  </section>
+
+  <section class="principle">
+    <h2 class="principle-title">Sending this to someone</h2>
+    <p>
+      Sharing builds a short summary of a route above &mdash; modes, duration, fare, last
+      departure, final walk &mdash; inside your own browser, and hands it to your phone's
+      normal share sheet. You choose who receives it.
+    </p>
+    <p>
+      Mira is not involved in that: the summary is not sent to our servers, and we keep no
+      record of it or of who you sent it to. Mira also never asks for your live location.
+      There is no tracking link, because a link that reports back would defeat the point.
+    </p>
+  </section>
+{% endblock %}

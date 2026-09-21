@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+
+{% block title %}I need help — Mira{% endblock %}
+
+{% block content %}
+  <p class="crumb"><a class="link" href="/">&#8592; Back</a></p>
+
+  <h1 class="page-title">What is going on?</h1>
+  <p class="page-sub">
+    Describe it however you like, in your own words. Mira matches it to a process that
+    already exists at {{ location.campus if location else 'your campus' }}.
+  </p>
+
+  {% if urgent %}
+    {#
+      Deliberately no country-specific number. Mira is built to work anywhere, so hard-coding
+      one country's emergency line would be wrong everywhere else -- and actively harmful
+      for a student who trusted it.
+    #}
+    <div class="notice notice-urgent" role="alert">
+      <p class="notice-title">If you are in immediate danger</p>
+      <p>
+        Contact your local emergency number or campus security now. Mira is a guide to
+        processes, not an emergency service, and nobody is watching this page.
+      </p>
+    </div>
+  {% endif %}
+
+  <form class="form" method="post" action="/help">
+    <label class="label" for="problem">What do you need help with?</label>
+    <textarea class="textarea" id="problem" name="problem" rows="4" required
+              placeholder="For example: I cannot pay my tuition this term and I do not know who to talk to."
+              aria-describedby="privacy-note">{{ submitted or '' }}</textarea>
+
+    <p class="privacy" id="privacy-note">
+      <strong>Mira does not require an account, and does not keep what you type.</strong>
+      Your description is used once to choose a process, then discarded. It is never sent to
+      an AI service, and Mira writes no copy of it to any database, file or log. It is sent
+      by POST rather than placed in the web address, so it does not land in your browser
+      history either.
+    </p>
+    <p class="privacy">
+      One honest limit: Mira runs on a hosting platform that keeps its own standard request
+      logs, which this project does not control. So we do not claim nothing is recorded
+      anywhere &mdash; only that Mira itself stores nothing.
+      <a class="link" href="/about">Exactly what happens, in detail</a>.
+    </p>
+
+    <button class="btn btn-primary" type="submit">Find the right process</button>
+  </form>
+
+  {% if unmatched %}
+    <div class="notice notice-quiet" role="status">
+      <p class="notice-title">Mira could not match that to a process</p>
+      <p>
+        Rather than guess, here is what Mira does have documented here. If one of these is
+        close, open it &mdash; the office listed there can redirect you.
+      </p>
+      {% if suggestions %}
+        <ul class="link-list">
+          {% for item in suggestions %}
+            {% if item %}
+              <li>
+                <a class="link" href="/help/topic/{{ item.problem_key }}">{{ item.display_name }}</a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {% if processes %}
+    <section class="pick">
+      <h2 class="section-title">Or pick from the list</h2>
+      <ul class="link-list">
+        {% for process in processes %}
+          <li>
+            <a class="link" href="/help/topic/{{ process.problem_key }}">{{ process.display_name }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% else %}
+    <div class="empty">
+      <p class="empty-title">No processes documented here yet</p>
+      <p>
+        Mira has no support routes recorded for this location. That is a gap in our data,
+        not a statement that no help exists.
+      </p>
+    </div>
+  {% endif %}
+{% endblock %}

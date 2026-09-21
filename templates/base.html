@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Mira{% endblock %}</title>
+  <meta name="description" content="Mira — a support companion for students. Find what you need, know what to do, get where you need to go.">
+  <meta name="theme-color" content="#6D2B4C">
+  {#
+    Absolute paths, not request.url_for('static', ...). These two URLs are a deployment
+    contract: vercel.json routes /static/(.*) to @vercel/static so the stylesheet is served
+    from the CDN and never invokes the Python function. url_for on a *named mount* has
+    changed behaviour across Starlette versions -- some produce /static//css/styles.css for a
+    leading-slash `path` -- and a wrong URL here fails as an unstyled page, which is a silent
+    failure in exactly the component this product is built around. The path is fixed, so it
+    is written as a fixed path.
+  #}
+  <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="wordmark" href="/">
+        <span class="wordmark-mark" aria-hidden="true">&#10022;</span>
+        <span>Mira</span>
+      </a>
+
+      {% if locations and locations|length > 1 %}
+        <details class="loc-switcher">
+          <summary class="loc-summary" aria-label="Change location">
+            <span class="loc-current">
+              {{ location.city if location else 'Choose location' }}
+            </span>
+            <span class="loc-caret" aria-hidden="true">&#9662;</span>
+          </summary>
+          <nav class="loc-menu" aria-label="Locations">
+            <ul>
+              {% for loc in locations %}
+                <li>
+                  <a href="/set-location/{{ loc.slug }}"
+                     {% if loc.id == location.id %}aria-current="true"{% endif %}>
+                    <span class="loc-menu-campus">{{ loc.campus }}</span>
+                    <span class="loc-menu-place">{{ loc.city }}, {{ loc.country }}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </nav>
+        </details>
+      {% elif location %}
+        <span class="loc-static">{{ location.city }}, {{ location.country }}</span>
+      {% endif %}
+    </div>
+  </header>
+
+  <main id="main" class="wrap main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p class="footer-line">
+        <a class="link" href="/about">How Mira works &amp; where the data comes from</a>
+      </p>
+      <p class="footer-note">
+        Mira shows where each fact came from and when it was last checked. It does not
+        make decisions for you.
+      </p>
+    </div>
+  </footer>
+
+  {# Enhancement only. Every flow works with this file absent. #}
+  <script src="/static/js/app.js" defer></script>
+</body>
+</html>

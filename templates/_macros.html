@@ -1,0 +1,177 @@
+{#
+  Shared macros.
+
+  `provenance` is the important one. Every fact Mira shows carries its truth-status, and
+  this macro is the ONLY place that decides how to render it. Centralising it means the
+  honesty rule cannot drift between screens.
+
+  Three states, and they are not interchangeable:
+
+      verified      ✓  a real-world claim, and the cited source supports THIS claim
+      illustrative  ◇  deliberately fictional demo data -- not a real-world claim at all
+      unverified    !  a real-world claim we do not yet have adequate evidence for
+
+  The states are distinguished by GLYPH as well as colour. Roughly 1 in 12 men has some
+  colour vision deficiency, and a trust marker that only works in colour is not a trust
+  marker. Markers come from the model so the vocabulary lives in exactly one place.
+#}
+
+{% macro provenance(record, extra="") %}
+  <span class="chip chip-{{ record.provenance_state }}">
+    <span class="chip-mark" aria-hidden="true">{{ record.provenance_marker }}</span>
+    {{ record.provenance_label }}
+  </span>
+  {%- if extra %}<span class="chip chip-quiet">{{ extra }}</span>{% endif %}
+{% endmacro %}
+
+
+{#
+  Where a claim applies. Deliberately separate from provenance: a verified Pakistani legal
+  process must never read as a universal rule for students worldwide. Demo-environment
+  records are not tagged, because the page-level banner already says the campus is
+  fictional and repeating it on every card is noise.
+#}
+{% macro jurisdiction_tag(record) %}
+  {%- if record.jurisdiction and record.jurisdiction != "demo environment" -%}
+    <span class="chip chip-jurisdiction">Applies in {{ record.jurisdiction }}</span>
+  {%- endif -%}
+{% endmacro %}
+
+
+{#
+  The explanation behind the marker. Without it the chip is a badge; with it, it is a
+  statement a reader can act on.
+#}
+{% macro provenance_note(record) %}
+  {% if record.provenance_hint %}
+    <p class="prov-note prov-note-{{ record.provenance_state }}">{{ record.provenance_hint }}</p>
+  {% endif %}
+{% endmacro %}
+
+
+{% macro freshness(record) %}
+  {% if record.last_verified %}
+    <p class="meta">
+      Last checked {{ record.last_verified }}
+      {%- if record.stale_days is not none %} &middot; {{ record.stale_days }} days ago{% endif %}
+    </p>
+  {% endif %}
+{% endmacro %}
+
+
+{#
+  A directory rots quietly. Past 90 days we say so on the card rather than presenting a
+  stale fact with the same confidence as a fresh one.
+#}
+{% macro stale_badge(record) %}
+  {% if record.is_stale %}
+    <span class="chip chip-stale">
+      <span class="chip-mark" aria-hidden="true">&#8987;</span> May be out of date
+    </span>
+  {% endif %}
+{% endmacro %}
+
+
+{#
+  Citations. A bare URL is worse than a name plus a link, so the model's `source_label`
+  prefers the name when we have one.
+#}
+{% macro sources(record, title="Source") %}
+  {% if record.source_url or record.additional_sources %}
+    <div class="sources">
+      <p class="sources-title">{{ title }}</p>
+      <ul class="sources-list">
+        {% if record.source_url %}
+          <li>
+            <a class="link" href="{{ record.source_url }}" rel="noopener noreferrer">{{ record.source_label }}</a>
+            {%- if record.source_date %} <span class="meta">checked {{ record.source_date }}</span>{% endif %}
+          </li>
+        {% endif %}
+        {% for src in record.additional_sources %}
+          {% if src.url %}
+            <li>
+              <a class="link" href="{{ src.url }}" rel="noopener noreferrer">{{ src.name }}</a>
+              {%- if src.date %} <span class="meta">checked {{ src.date }}</span>{% endif %}
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+{% endmacro %}
+
+
+{#
+  The environment banner. Fictional campus data must never be mistaken for verified fact,
+  so this is not decoration -- it is the mechanism that keeps the demo honest.
+#}
+{% macro demo_banner(show) %}
+  {% if show %}
+    <div class="notice notice-demo" role="note">
+      <p class="notice-title">Demo environment &mdash; fictional</p>
+      <p>
+        Mira uses a fictional campus and illustrative data to demonstrate the product
+        experience. Real-world deployments would use verified institution-specific
+        information.
+      </p>
+      <p>
+        Real-world processes are tagged individually: <strong>Verified</strong> where a
+        source supports the exact claim, <strong>Not yet verified</strong> where it does not.
+      </p>
+    </div>
+  {% endif %}
+{% endmacro %}
+
+
+{% macro open_state(record) %}
+  {% if record.open_now is none %}
+    <span class="chip chip-quiet">Hours unknown</span>
+  {% elif record.open_now %}
+    <span class="chip chip-open">Open now</span>
+  {% else %}
+    <span class="chip chip-closed">Closed now</span>
+  {% endif %}
+{% endmacro %}
+
+
+{#
+  Transport conditions are CURATED, not crowdsourced. User-submitted reports would imply
+  storage, moderation and abuse handling -- a different product with different privacy
+  consequences. Each condition carries its own provenance for the same reason a record does.
+#}
+{% macro conditions(route) %}
+  {% if route.conditions %}
+    <div class="conditions">
+      <p class="conditions-title">Things students mention about this route</p>
+      <ul class="conditions-list">
+        {% for condition in route.conditions %}
+          <li>
+            <span class="chip-mark chip-mark-{{ condition.provenance }}" aria-hidden="true">{% if condition.provenance == "verified" %}&#10003;{% else %}&#9671;{% endif %}</span>
+            {{ condition.text }}
+            {%- if condition.source_name %} <span class="meta">{{ condition.source_name }}</span>{% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+{% endmacro %}
+
+
+{#
+  Fare rendering. Two rules from the honesty model:
+    * when we cannot characterise our confidence, omit the figure rather than imply
+      a precision we do not have;
+    * "Free" is a fact, not an estimate, so it does not depend on fare_confidence.
+#}
+{% macro fare(route) %}
+  {%- if route.show_fare -%}
+    <span class="fare-figure">{{ route.fare_label }}</span>
+    {%- if route.fare_confidence_label %} <span class="chip chip-quiet">{{ route.fare_confidence_label }}</span>{% endif %}
+    {%- if route.fare_note %} <span class="meta">{{ route.fare_note }}</span>{% endif %}
+  {%- else -%}
+    <span class="fare-figure fare-omitted">Not shown</span>
+    <span class="meta">
+      Mira has no fare figure for this route that it can stand behind. Ask before you travel.
+    </span>
+  {%- endif -%}
+{% endmacro %}

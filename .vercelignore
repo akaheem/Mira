@@ -1,0 +1,33 @@
+# What Vercel must NOT upload.
+#
+# This file is not housekeeping. Without it the upload includes .venv/ and node_modules/,
+# which is several thousand files of dependencies that are reinstalled or unused on the
+# build side. Add this before the first deploy, not after a slow one.
+
+# Python virtualenv -- Vercel installs from requirements.txt instead.
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Tailwind build tooling. The compiled stylesheet in static/css/styles.css is committed,
+# so the deployed build needs no Node step at all.
+node_modules/
+package.json
+package-lock.json
+tailwind.config.js
+static/css/input.css
+
+# Development notes and repo housekeeping.
+notes/
+.git/
+.gitignore
+.vercel/
+
+# The tracker is development documentation, not part of the deployed application.
+PROJECT_TRACKER.md
+README.md
+
+# Local secrets, if any are ever added. Never deployed.
+.env
+.env.*

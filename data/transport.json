@@ -1,0 +1,183 @@
+[
+  {
+    "id": "pk-lhr-r01",
+    "country": "Pakistan",
+    "city": "Lahore",
+    "campus": "Mira Demo Campus",
+    "from_area": "Township",
+    "modes": ["Metro bus", "Rickshaw"],
+    "fare_min": 70,
+    "fare_max": 180,
+    "currency": "PKR",
+    "fare_confidence": "estimated",
+    "duration_min": 35,
+    "duration_max": 60,
+    "transfers": 1,
+    "womens_transport": true,
+    "womens_hours": "07:00-20:00",
+    "final_walk_m": 400,
+    "entry_point": "Main Gate",
+    "last_departure": "21:30",
+    "conditions": [
+      {
+        "text": "Crowding on the metro leg at peak times, roughly 08:00-09:30 and 16:30-18:00.",
+        "provenance": "illustrative"
+      },
+      {
+        "text": "Service frequency drops noticeably after 20:00.",
+        "provenance": "illustrative"
+      }
+    ],
+    "note": "Women's section on the metro service. Rickshaw leg is the variable part of the cost.",
+    "provenance": "illustrative",
+    "jurisdiction": "demo environment"
+  },
+  {
+    "id": "pk-lhr-r02",
+    "country": "Pakistan",
+    "city": "Lahore",
+    "campus": "Mira Demo Campus",
+    "from_area": "Township",
+    "modes": ["Rickshaw (direct)"],
+    "fare_min": 0,
+    "fare_max": 0,
+    "currency": "PKR",
+    "fare_confidence": "unknown",
+    "fare_is_free": false,
+    "duration_min": 25,
+    "duration_max": 45,
+    "transfers": 0,
+    "womens_transport": false,
+    "womens_hours": "",
+    "final_walk_m": 100,
+    "entry_point": "Main Gate",
+    "last_departure": "Any time (no fixed schedule)",
+    "conditions": [
+      {
+        "text": "Fares rise sharply in rain and at peak times.",
+        "provenance": "illustrative"
+      }
+    ],
+    "note": "No metered fare and no fixed schedule, so Mira does not show a figure here. Ask the driver before you get in.",
+    "provenance": "illustrative",
+    "jurisdiction": "demo environment"
+  },
+  {
+    "id": "pk-lhr-r03",
+    "country": "Pakistan",
+    "city": "Lahore",
+    "campus": "Mira Demo Campus",
+    "from_area": "Johar Town",
+    "modes": ["University shuttle", "Walk"],
+    "fare_min": 0,
+    "fare_max": 0,
+    "currency": "PKR",
+    "fare_confidence": "estimated",
+    "fare_is_free": true,
+    "duration_min": 20,
+    "duration_max": 30,
+    "transfers": 0,
+    "womens_transport": false,
+    "womens_hours": "",
+    "final_walk_m": 250,
+    "entry_point": "Gate 2 (side entrance)",
+    "last_departure": "17:15",
+    "conditions": [
+      {
+        "text": "The 08:00 departure fills up quickly.",
+        "provenance": "illustrative"
+      }
+    ],
+    "note": "Free shuttle, but the last one leaves at 17:15 - it does not cover evening classes.",
+    "provenance": "illustrative",
+    "jurisdiction": "demo environment"
+  },
+  {
+    "id": "pk-lhr-r04",
+    "country": "Pakistan",
+    "city": "Lahore",
+    "campus": "Mira Demo Campus",
+    "from_area": "Johar Town",
+    "modes": ["Rickshaw", "Walk"],
+    "fare_min": 200,
+    "fare_max": 320,
+    "currency": "PKR",
+    "fare_confidence": "estimated",
+    "duration_min": 22,
+    "duration_max": 40,
+    "transfers": 1,
+    "womens_transport": false,
+    "womens_hours": "",
+    "final_walk_m": 900,
+    "entry_point": "Gate 2 (side entrance)",
+    "last_departure": "Any time (no fixed schedule)",
+    "conditions": [
+      {
+        "text": "Longest final walk of the routes listed here, at 900 m from the drop-off point.",
+        "provenance": "illustrative"
+      }
+    ],
+    "note": "The long final walk is the part most students mention. No women's-only option on this route.",
+    "provenance": "illustrative",
+    "jurisdiction": "demo environment"
+  },
+
+  {
+    "id": "uk-mcr-r01",
+    "country": "United Kingdom",
+    "city": "Manchester",
+    "campus": "Mira Demo Campus",
+    "from_area": "Fallowfield",
+    "modes": ["Bus", "Walk"],
+    "fare_min": 2,
+    "fare_max": 2,
+    "currency": "GBP",
+    "fare_confidence": "estimated",
+    "duration_min": 15,
+    "duration_max": 25,
+    "transfers": 0,
+    "womens_transport": false,
+    "womens_hours": "",
+    "final_walk_m": 200,
+    "entry_point": "Main Gate",
+    "last_departure": "23:40",
+    "conditions": [
+      {
+        "text": "Frequent service through the evening.",
+        "provenance": "illustrative"
+      }
+    ],
+    "note": "Single fare shown. Day and weekly tickets work out cheaper if you travel most days.",
+    "provenance": "illustrative",
+    "jurisdiction": "demo environment"
+  },
+  {
+    "id": "uk-mcr-r02",
+    "country": "United Kingdom",
+    "city": "Manchester",
+    "campus": "Mira Demo Campus",
+    "from_area": "Fallowfield",
+    "modes": ["Night bus"],
+    "fare_min": 2,
+    "fare_max": 3,
+    "currency": "GBP",
+    "fare_confidence": "estimated",
+    "duration_min": 20,
+    "duration_max": 30,
+    "transfers": 0,
+    "womens_transport": false,
+    "womens_hours": "",
+    "final_walk_m": 50,
+    "entry_point": "Main Gate",
+    "last_departure": "03:00",
+    "conditions": [
+      {
+        "text": "Runs after the last regular service of the day.",
+        "provenance": "illustrative"
+      }
+    ],
+    "note": "Sheltered stop directly outside the gatehouse. Runs after the last regular service.",
+    "provenance": "illustrative",
+    "jurisdiction": "demo environment"
+  }
+]
