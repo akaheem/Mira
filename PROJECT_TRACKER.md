@@ -846,7 +846,7 @@ static CSS → router → provenance rendering → harassment process → privac
 | 6 | Router | **PASS** | `"Mere paas fee ke paise nahi hain"` → `cant_pay_fees`, confidence `medium`, method `keywords` — exactly as specified |
 | 7 | **Privacy canary** | **PASS** | Method is POST; the text appears in **no URL or query string** and in **no generated link** (checked `href`/`action`/`src`); `GET /help?problem=<canary>` returns the plain 4,909-byte form with **zero** echo, so D10 holds in production |
 | 8 | Request-body logging | **PASS** | Fired a unique token through `POST /help`, then read real runtime logs: the only line is `λ POST /help`. Token 0 · "paise" 0 · request body 0 |
-| 9 | Mobile viewport at 375px | **NOT RUN** | Needs a browser. The `viewport` meta is correct (`width=device-width, initial-scale=1`). Deferred to step 5, which is the same work |
+| 9 | Mobile viewport at 375px | **PASS** — was the last check outstanding | Measured on the **deployed domain** with a real 375×812 mobile viewport (Playwright + Edge, `isMobile`, touch): **all 13 pages return 200 with `scrollWidth` exactly 375 and zero overflowing elements.** Not a screenshot judgement — every element's `getBoundingClientRect().right` was compared against `innerWidth`, excluding deliberate scrollers. Pages covered: home (first visit and chosen), both flows' indexes and results, the Flow C form, four verified cards across both jurisdictions, the unverified card, and About |
 | 10 | Development-only assumptions | **PASS** | Zero occurrences of `localhost`, `127.0.0.1`, `Traceback`, `jinja2`, `werkzeug` or a source path across all five pages |
 
 **One finding from check 4, since fixed — §8 item 19.** Flow C rendered jurisdiction **twice**:
@@ -861,6 +861,22 @@ mismatch this flow most needs to avoid. It was **not**: that string is the secon
 the location selector, and the selected location was `Mira Demo Campus Lahore, Pakistan` —
 correct. A 140-character window around a grep match is not evidence. This is why §12 asks for
 screenshots rather than greps.
+
+**A second false alarm, avoided the same way — and the more useful one.** The first attempt at
+check 9 used headless Edge directly (`--headless=new --window-size=375,900 --screenshot`). The
+capture came back with **every line of text sliced off at the right edge** — the heading read
+"What do you need right no". That is exactly what a horizontal-overflow bug looks like, and it
+would have been easy to "fix" CSS that was never broken. It was not a bug: `--window-size` sets
+the *window*, and the capture is clipped to it while the page lays out wider. **The tell is
+that the CSS was already mobile-first** — only `min-width` media queries, no fixed widths above
+375px, and a correct viewport meta — so an overflow would have had nothing to cause it.
+
+The check was therefore run the only way that actually decides it: a real mobile viewport with
+`isMobile: true`, reading `scrollWidth` and comparing every element's right edge against
+`innerWidth`. Result: **375 exactly, on all 13 pages, zero offenders.** *A screenshot can be
+evidence of how a page was captured rather than of how it renders.* This is the same lesson as
+the grep above, one level down: the first false alarm was a grep standing in for a render, and
+this one was a render standing in for a measurement.
 
 **The AI question, answered accurately:** the problem text is **not** sent to any external AI
 service, because there is no LLM in the application at all (D19). Routing is deterministic and

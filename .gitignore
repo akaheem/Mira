@@ -22,6 +22,11 @@ node_modules/
 # PROJECT_TRACKER.md §13 and §16 first. See §16 for why, and for what was preserved.
 notes/
 
+# Submission screenshots and Devpost copy. Generated from the deployed domain, not project
+# source — Devpost hosts the images itself, so committing them would only bloat the repo
+# with binaries that go stale the moment the UI changes. Kept on disk for easy reference.
+submission-assets/
+
 # Local secrets
 .env
 .env.*
