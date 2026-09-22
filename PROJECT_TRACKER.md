@@ -14,13 +14,37 @@ Last updated: **2026-09-21**
 
 ## 0. CURRENT DEVELOPMENT STATE
 
-**Phase:** Day 1 — **core application validated under real HTTP execution. Deployment phase.**
-**Current milestone:** GitHub → Vercel → **production validation.** *Then* source real records.
+**Phase:** Day 2 — **deployed and production-validated. Source curation.**
+**Current milestone:** **Verified records sourced (§14e, §14f). Target met — 11 verified.**
+Deployment is complete.
 
-**Status:** Core application validated under real HTTP execution, locally. Not yet deployed.
-Local success is **not** evidence that production works — that is a separate environment with
-its own failure modes (runtime, bundling, static routing, cold start), and it is validated
-separately below.
+**Deployment milestone — recorded 2026-09-22:**
+
+```
+DEPLOYMENT STATUS: COMPLETE
+
+GitHub:      PUBLIC / VERIFIED
+Vercel:      PUBLIC / VERIFIED
+Production:  LIVE
+
+Remaining major work:
+  MOBILE VALIDATION
+  SUBMISSION ASSETS
+  DEVPOST
+  DEMO VIDEO
+```
+
+**Verified records: 11 of 12 Flow C processes** — target was 8–12, and the bar was never
+lowered to reach it. `pk-lhr-s05` (hostel) stays `unverified` on purpose: HEC publishes no
+general student accommodation policy, so there is nothing to cite (§14f). Flow B remains
+`illustrative` **by construction** — a washroom's opening hours at a fictional campus cannot
+be sourced, and inventing a citation for one would be the exact failure the model exists to
+prevent (§14c).
+
+**Status:** **DEPLOYED AND LIVE.** Local success was never treated as evidence that production
+works — that is a separate environment with its own failure modes (runtime, bundling, static
+routing, cold start) — and that refusal paid for itself: production failed in two ways that no
+amount of local testing could have revealed (D27).
 
 **Last completed:**
 - Backend complete: `models.py`, `repository.py`, `routing.py`, `app.py`
@@ -183,6 +207,8 @@ implied certainty.
 | D26 | **No co-author, contributor or "generated with" attribution anywhere in this repository** | **LOCKED** | Owner's direct instruction, 2026-09-21: *"i don't want any co-author nor contributor on the repository."* This is a judged solo submission; a second name in the commit history or the GitHub contributor list changes how the work is attributed. It also overrides the harness's default commit-trailer guidance, which defers to the owner's own instruction | Never. This is not a technical decision open to a better argument |
 | D27 | **`vercel.json` reduced to `$schema` only, and the project's framework preset set explicitly to `fastapi`** — supersedes the `functions.includeFiles` half of **D25** | **LOCKED** | The first production deploy failed **twice, in two different ways, and neither was reachable locally**. **(1)** `functions: {"app.py": …}` was rejected outright: *"The pattern `app.py` defined in `functions` doesn't match any Serverless Functions inside the `api` directory."* Despite the FastAPI docs describing `functions` as keyed by *"your resolved entrypoint file"*, this platform version validates it against `api/**`. **(2)** Removing the key let the deploy report **success while building a static copy of the repository with no function at all** — `Builds: . [0ms]`, build duration 2 s — because the project had been created with preset `Other`. Every app route returned a 79-byte platform 404 while `/static/css/styles.css` served correctly, which reads like a routing bug and is not one. Fixed with `vercel project update mira-student-support --framework fastapi`; the zero-config path then bundled `data/` and `templates/` correctly with **no `includeFiles` at all** (§14b checks 1 and 2). `vercel link` reporting *"Detected FastAPI"* is a **local filesystem heuristic and is not evidence about the build** | A project is created fresh and its preset is `Other` again — set it **before** deploying. Do not re-add `functions` for a root entrypoint; do not return to `builds` |
 | D28 | Flow C **echoes the student's own words back to her in the same response** (`You described: "…"`) | **LOCKED** | She has to see what she typed to judge whether the match is right; the no-match path repopulates the form for the same reason. This is text returned to *the same person, in the same response* — **not** a URL, not a query string, not a generated link, not a store. It looks like a privacy leak to a naive grep, which is exactly why it is pinned here: §14b check 7 tests it, and the echo is why a canary search returns a hit that must be **read** rather than counted | A redesign of the Flow C result page removes the echo — then §14b check 7's wording must change with it |
+| D29 | **The home page does not pre-select a location** — a first visit asks where you are studying | **LOCKED** | Owner's decision, 2026-09-22, taken against keeping the Lahore default. A default presents one country's records as though they were the whole product, and the point of the record model is that the answer depends on where you are. The switcher summary rendered only the *city*, so nothing on the first screen revealed that a second country existed — it was one dropdown deep. **Deep links still fall back to a default** (`current_location`); only the front door asks, so `/help` reached directly neither 500s nor loops | The data holds only one country — then a chooser is a step with nothing to choose. Reverting must **not** restore the city-only switcher summary; that was the actual defect |
+| D30 | **The three provenance states are shown on the home page, as live records rather than a legend** | **LOCKED** | Owner's instruction: *"the home page needs to show the three provenance states naturally. Not only on About. We don't want a judge to have to navigate to About just to discover the core trust mechanism."* Each row is a real record drawn from the dataset and linked to its own card, so the strip cannot drift from what the app shows — promoting a record to Verified changes it on the next request, with no second place to remember to update. A hand-written legend would be a claim *about* the app; this is the app. Where the current location has no example of a state, the strip falls back to the whole dataset: a trust explainer that silently shows two of its three states teaches the wrong lesson on the one screen that exists to teach it | A second place starts deciding how a state is *drawn* — `_macros.provenance` remains the only place that does. This decision is about where the vocabulary is *shown*, not how it renders |
 
 ---
 
@@ -848,19 +874,84 @@ About page wording is wrong and must be corrected rather than the finding explai
 The gate is satisfied. Nine of ten production checks pass against the public URL, and check 9
 is the same browser work as step 5. **This batch may now begin.**
 
+```
+VERIFIED RECORD TARGET: 8-12
+
+Minimum quality — every one of these, or the record stays unverified:
+  Exact claim supported        the source supports the specific claim on the card
+  Correct jurisdiction         the source governs the jurisdiction the card states
+  Actual URL fetch succeeds    the final URL was fetched, not merely found in search
+  Source is authoritative      primary/regulatory/official, not a blog or aggregator
+  Record renders correctly     re-render the card and read it, not just the JSON
+  Validation recorded          the check is written into this tracker
+```
+
 Not an arbitrary quota, and **never** relax §5 to raise the count. A record the source does
-not specifically support stays `unverified` no matter how plausible it is.
+not specifically support stays `unverified` no matter how plausible it is. **8 genuinely
+supported records beat 12 loosely-attributed ones** — the count is a by-product of the
+quality bar, never a reason to lower it.
 
-Prioritise records the demo journey actually walks through, so a judge *encounters* the
-provenance model rather than reading a statistic:
+**Correction — the three-bullet plan below was wrong, and reading the data model is what
+disproved it (2026-09-22).**
 
-- **Flow B — 3–4 verified** essential/support resources
-- **Flow C — 4–5 verified** support processes, **especially the legally sensitive or
-  high-consequence ones**
-- **Flow A — 1–2 verified** transport/service records, where a reliable primary source exists
+The original plan split the target across all three flows. But look at what a Flow B record
+*is*: `building`, `landmark`, `campus`, `hours`, `price`. Every one is a property of a
+**specific fictional building at Mira Demo Campus**. There is no source on earth that
+verifies the opening hours of a washroom at a campus we invented — and there should not be.
+A citation for it would be a fabrication by construction.
 
-Current state is **1 verified**, which means the trust model works but is nearly invisible.
-That is the submission-quality bottleneck, not the feature count.
+The same holds for Flow A's six routes: they are journeys *from* the demo campus.
+
+So the honest structural position is:
+
+| Flow | Records | Verifiable? | Why |
+|---|---|---|---|
+| B — resources | 21 | **No, structurally** | Properties of an invented campus. `illustrative` is not a placeholder — it is the correct final state |
+| A — transport | 6 | **No, structurally** | Routes from that same invented campus |
+| C — support processes | 9 | **Yes** | Real-world statutory/administrative processes that exist independently of any campus |
+
+**This is not a defect to fix. It is the model working.** The demo's strongest possible
+statement is a single screen showing `◇` on the campus washroom and `✓` on the national
+ombudsperson process, with the reader able to see *why* they differ. Promoting a Flow B
+record to `verified` would destroy exactly that.
+
+**Consequence for the target: verified records can only come from Flow C, and Flow C
+currently holds only 9.** The reachable ceiling was 9, so the target of 8–12 required either
+a loosened bar or a wider Flow C. The bar does not move — so Flow C widens instead.
+
+**The widening is the demonstration the owner asked for.** Pakistan documents six problem
+types; the United Kingdom documents three. Adding the three missing UK types gives the
+**same six problems in two jurisdictions**, each with its own process and its own
+jurisdiction tag — which is precisely "Mira's data model can represent jurisdiction-specific
+support without pretending one country's rules apply everywhere," shown rather than claimed.
+
+New UK records are written only from what an authoritative UK source actually states. If a
+process cannot be sourced, the record is created `unverified` — or not created at all. **A
+new record is not a new verified record.**
+
+Prioritise in this order:
+
+1. **Flow C, Pakistan** — 5 currently `unverified`; the legally sensitive and high-consequence
+   ones first
+2. **Flow C, United Kingdom** — 3 currently `unverified`, plus the 3 new types
+3. Nothing else. Flow B and Flow A are complete as `illustrative`.
+
+Current state is **1 verified of 36**, which means the trust model works but is nearly
+invisible. That is the submission-quality bottleneck, not the feature count.
+
+**Method — the owner's sequence, followed exactly, per record:**
+
+```
+Candidate claim -> Find primary/authoritative source -> Open/fetch the actual final URL
+-> Check exact claim against source -> Check jurisdiction -> Check current/relevant date
+-> Store citation + provenance -> Re-run rendered card test -> Record validation here
+```
+
+**Do not mark something `verified` merely because an official-looking website exists.** The
+FOSPAH incident (§8 item 17) is the standing proof: a plausible, official-looking URL that
+had been cited as a source returned **404** when actually fetched. Every candidate URL in
+this batch is fetched and its text read before the record is promoted.
+
 
 ### 14d. Credential handoff — **COMPLETE 2026-09-21**
 
@@ -888,6 +979,148 @@ and nothing else. `.gitignore` already excludes `.env*` and `.vercel/`.
 **The §14b gate on the §14c sourcing batch is now satisfied** (2026-09-22). Public access was a
 hard submission requirement; a richer dataset is an improvement. Requirements outrank
 improvements — and here the requirement failed first, exactly as that ordering predicted.
+
+---
+
+### 14e. Sourcing batch 1 — United Kingdom Flow C — **VALIDATION RECORD 2026-09-22**
+
+**Result: 6 records written, 6 verified. Project verified count: 1 → 7.**
+
+Every URL below was **fetched and its text read in this session**. A research pass located
+candidates, but nothing was promoted on a research pass's word — the FETCH step in the §14c
+sequence is the one that caught the FOSPAH 404, and it is not skippable.
+
+| Record | The exact claim on the card | Source, fetched | Verdict |
+|---|---|---|---|
+| `uk-mcr-s01` cant_pay_fees | Contact the student services department; they decide if you qualify; the amount is decided by the university, not nationally; lump sum or instalments; not usually repaid | GOV.UK — *Extra money from your university or college to study* | ✓ every step is the page's own statement |
+| `uk-mcr-s04` scholarship_support | **There is no national scholarship scheme**; each institution sets its own rules for who qualifies, how much, and how to apply | GOV.UK — same page | ✓ verified as a *negative* — see Correction C |
+| `uk-mcr-s02` harassment_concern | Raise it with your provider first; the provider must publish a single comprehensive source covering how to report and its timescales; then the provider's complaints process; then the OIA | OfS — *Condition E6* + *A guide for students: Raising an issue* | ✓ |
+| `uk-mcr-s03` academic_dispute | Complete internal procedures first; Completion of Procedures Letter; **12 months** from the provider's final decision; MyOIA, email or post; never charged | OIA — *How to complain to us* + *Who can complain to us* | ✓ |
+| `uk-mcr-s05` hostel_problem | Deposit protected within **30 days**; returned within **10 days** of agreement; free dispute resolution, both sides must agree, decision final; no published dispute deadline; county court if never protected | GOV.UK — *Tenancy deposit protection* + *…disputes and problems* | ✓ |
+| `uk-mcr-s06` health_concern | Free and confidential counselling for undergraduates and postgraduates; mental health adviser; reasonable adjustments; NHS talking therapies self-referral; DSA needs evidence of a long-term condition | NHS — *Student mental health and counselling* + *Find NHS talking therapies* | ✓ |
+
+**Three corrections this batch forced. Each was a real error, not a tidy-up.**
+
+**A. `jurisdiction` was too coarse to pass its own test.** Every source above is
+**England**-scoped (OfS registers English providers; NHS and GOV.UK student finance pages are
+the England ones; the tenancy deposit route is England housing law), and the OIA scheme covers
+**England and Wales**. The pre-existing UK records said `United Kingdom`. That fails the §14c
+criterion *"correct jurisdiction — the source governs the jurisdiction the card states"*:
+higher education, health and housing are all devolved, so an England-only process labelled
+"United Kingdom" is precisely the overreach this field exists to prevent. Records now carry
+their true scope. **The asymmetry with Pakistan — national there, England here — is not an
+inconsistency; it is what the two jurisdictions actually look like**, and it is a better
+demonstration of the model than uniform country labels would be.
+
+**B. A record can be promoted only after the unsupported parts are removed.** The three
+pre-existing UK records named **fictional campus places** ("Student Hub, ground floor",
+"Student Money Advice Team") and asserted an unsourced timescale ("Hardship fund decisions
+typically take 2-4 weeks"). Under a ✓ chip that is a fabricated fact sitting under a trust
+marker. The verified PK record already showed the correct pattern — a generic, real office
+("Your institution's Inquiry Committee, or the Ombudsperson"). Rewritten to what the sources
+state. **Where a source states no timescale or no document list, the field is now empty**;
+`uk-mcr-s01`, `-s04` and `-s06` have no timeline for exactly that reason. An empty field is
+honest; a plausible one under a ✓ is not.
+
+**C. A verified negative is still a verified claim.** The UK has no national scholarship
+scheme — GOV.UK's own position is that institutions set their own rules. `uk-mcr-s04` states
+that, and cites the page that says it. This is not a thin record with a gap in it; the absence
+*is* the finding, and a student who learns it stops hunting for an application form that does
+not exist.
+
+**Also worth recording, because it is the kind of thing that slips through:**
+
+- **Condition E6 imposes no fixed deadlines.** It requires providers to *publish* their
+  timescales. A record claiming a national UK harassment timeline would have been invented, and
+  the honest version is more useful: the timescale is the provider's, and it must be published.
+- **`nhs.uk/mental-health/where-to-get-urgent-help-for-mental-health/` returns HTTP 404** — do
+  not cite it. The live urgent-help page is under `/nhs-services/`.
+- **The NHS student mental health page is past its own review date** ("last reviewed 29 March
+  2023, next review due 29 March 2026"). It is live and remains the NHS's own guidance, and the
+  claims taken from it are structural rather than time-sensitive, so it stands — but the fact is
+  recorded here rather than hidden, and `source_date` on the card records **when we checked**,
+  not when NHS last reviewed it. Those are different dates and the card does not conflate them.
+
+**Still open in this batch:** *(closed by §14f — the Pakistan pass completed and is recorded
+below.)*
+
+---
+
+### 14f. Sourcing batch 2 — Pakistan Flow C — **VALIDATION RECORD 2026-09-22**
+
+**Result: 5 records re-sourced, 4 verified, 1 deliberately left `unverified`.
+Project verified count: 7 → 11. The 8–12 target is met.**
+
+Every URL below was **fetched in this session** and its content read — the four PDFs were
+downloaded and their text extracted, so the quotes come from the documents, not from search
+snippets or a research pass's summary. **The PBM requirements notice is an Urdu poster, so it
+was read as an image directly** rather than relied on through anyone's translation.
+
+| Record | The exact claim on the card | Source, fetched | Verdict |
+|---|---|---|---|
+| `pk-lhr-s01` cant_pay_fees | Applications go **through the institution**, addressed to the MD, PBM; the Bonafide Certificate is rejected if altered; **government institutions only**, private/self-finance excluded; not eligible if a parent is a government employee or other government assistance is received; named fee heads covered; first semester/year reimbursed to the student on a paid receipt, the rest paid to the institution; failing a subject ends eligibility | PBM — *How to Get Assistance* + form **PBM-QMS-IFA(Edu)F-01** + the Urdu requirements notice | ✓ every element is the form's own text |
+| `pk-lhr-s02` scholarship_support | For the HEC Need-Based Scholarship the form comes **from** and is submitted **to** the university's Financial Aid Office; **"HEC will not accept any application form directly"**; funds are not transferred to students by HEC; undergraduate 4–5 year programmes; self-finance admission **not** eligible | HEC — *Need-Based Scholarship: How to Apply* + *Eligibility Criteria* | ✓ |
+| `pk-lhr-s04` academic_dispute | Five-member grievance committee headed by the Controller of Examinations; written grievance to the Head of Department within **7 working days** of the grade; committee must hear both sides; decision within **5 working days** or before registration, whichever is earlier; decision final and binding; answer book **not re-assessed** under any circumstances; re-checking covers only listed clerical points; marks may **decrease** | HEC — *Policy Guidelines for Implementation of Uniform Semester System in HEIs of Pakistan* §19, §28 + *Students Grievance Redressal Portal* | ✓ verbatim, both section numbers confirmed |
+| `pk-lhr-s06` health_concern | The policy is **binding on all HEIs, public and private**; each institution must appoint a Focal Person; a student needing medical or mental health assistance may reach out to the Focal Person; an on-campus counsellor/psychologist/psychiatrist must exist and any student with anxiety, depression or PTSD may seek them; every institution must run a helpline; support is confidential | HEC — *Policy on Drug and Tobacco Abuse in Higher Education Institutions* §1.5, §3.4, §5.2, §5.4, §5.5, §8.3 + *National Youth Helpline* | ✓ mental-health provisions are general in wording; see Correction E |
+| `pk-lhr-s05` hostel_problem | **No source exists.** Stays `unverified`. | — | ✗ see below |
+
+**Two corrections this batch forced.**
+
+**D. A source's own scope is a limit on the card, not a footnote.** PBM's assistance is for
+students in **government** institutions: the form's own title says "STUDYING IN GOVERNMENT
+INSTITUTIONS" and note 3 excludes private and self-finance students. The record as written
+before this pass would have sent a private-university student to an office that cannot help
+her. The card now states the restriction as one of its steps, not in small print. **A source
+can support a claim and still not support it for the person reading the card.**
+
+**E. Binding and non-binding are different claims and must be carried.** HEC's drug and
+tobacco policy states in §1.5 that it is binding on all HEIs under the HEC Ordinance 2002.
+The semester-system examination guidelines state no such thing — they are written as guidance
+("All HEIs *should* have…"). Both cards now say which they are. Flattening the two into
+"national policy" would have overstated one of them, and the distinction is exactly what a
+student deciding whether to rely on it needs.
+
+**Also worth recording, because each of these is a live risk if forgotten:**
+
+- **`pbm.gov.pk/orders/ifapolicy.pdf` returns HTTP 404.** That is the document behind the
+  widely-quoted PBM income thresholds (e.g. Rs 17,500/month). **No income threshold appears on
+  the card**, because the document that states it could not be retrieved. Third-party pages
+  repeat the figure; they are not good enough.
+- **`peef.org.pk` fails TLS verification** — certificate `CN=peef.org.pk`, Sectigo DV, expired
+  **26 May 2026**. The site is live and maintained (footer "Last Updated: Sep 14, 2026") but
+  unreachable without disabling certificate validation. PEEF is the most-cited Pakistani
+  scholarship source, and **we could not verify it at source, so nothing from PEEF is on any
+  card.** University and consultancy pages quoting PEEF deadlines were found and deliberately
+  **not** used as substitutes.
+- **`ehsaas.hec.gov.pk` refuses connections.** This is the portal HEC's own Benazir
+  Undergraduate Scholarship page directs applicants to. Confirmed directly (21s, no response).
+  Rather than omit the scheme or pretend the route works, the currency caveat is on the card
+  itself, in `jurisdiction_note`, dated.
+- **HEC publishes no general student accommodation policy.** HEC's full published policy index
+  (25 policies) and student-services index (14 services) were read; neither contains a hostel
+  or residence policy. The closest provision is in HEC's disability policy and is scoped to
+  students with disabilities. `pk-lhr-s05` therefore **stays `unverified`**, and its
+  `jurisdiction_note` says why. *This is the point of the state existing:* the record a student
+  most wants a national answer for is the one that does not have one.
+- **HEC's Benazir FAQ page is stale** — it still lists eligible admission sessions as Spring
+  2020 and Fall 2020. The award-process page does not carry that problem, but the fact is
+  recorded so the scheme's currency is not overstated anywhere.
+
+**Verification run: 67 checks, 0 failures.** Render-level, in-process via `TestClient` so a
+stale reloader cannot flatter the result. Covers: all 15 routes × 3 location states; every
+verified record rendering its ✓ marker, source name and jurisdiction tag; every verified
+record asserted free of invented campus detail ("Administration Block", "Room 12", "2-4
+weeks"); `pk-lhr-s05` rendering `!` with no source URL; the trust strip rendering all three
+states on **both** locations; the neutral first screen on a genuinely fresh client; and POST
+routing for eight phrasings across both jurisdictions. **No verified record lacks a source
+URL; no verified record carries a timescale its source does not state.**
+
+**Multi-jurisdiction coverage — the thing this was for.** Both locations now answer the same
+six problems, and the answers differ because the jurisdictions differ: fees route through
+PBM's institutional channel in Pakistan and through the university's hardship fund in England;
+grades go to a statutory-deadline committee in Pakistan and to the OIA after internal
+procedures in England and Wales; a scholarship is a national HEC programme in Pakistan and
+**does not exist nationally** in England. That is the model demonstrated rather than asserted.
 
 ---
 

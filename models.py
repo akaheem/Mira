@@ -89,6 +89,20 @@ PROVENANCE_HINTS: dict[str, str] = {
     UNVERIFIED: "Mira has not established a source for this. Confirm before relying on it.",
 }
 
+# One-line meanings, for the trust strip on the home page.
+#
+# Deliberately separate from PROVENANCE_HINTS above. A hint explains the state of one
+# *particular card*, and is empty for verified because "Verified" sitting next to a source
+# link is already self-explanatory there. The home page strip is doing the opposite job:
+# teaching the vocabulary to someone who has not seen a card yet, so it needs the
+# definition rather than the caveat. The illustrative wording is kept identical to the
+# hint, since both are stating the same fact.
+PROVENANCE_MEANINGS: dict[str, str] = {
+    VERIFIED: "A source supports this exact claim, in this jurisdiction.",
+    ILLUSTRATIVE: "Demo resource for a fictional campus. Not a real-world fact.",
+    UNVERIFIED: "No source yet — confirm before relying on it.",
+}
+
 # Fare confidence. Fares are the one part of Flow A we cannot reliably cite, so rather
 # than implying a precision we do not have, we label the confidence -- and omit the
 # figure entirely when we cannot characterise it at all.

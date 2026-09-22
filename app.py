@@ -51,6 +51,19 @@ def current_location(request: Request):
     return repo.default_location()
 
 
+def chosen_location(request: Request):
+    """The location the visitor actually selected, or None if they have not chosen one.
+
+    Deliberately distinct from current_location() above, which falls back to a default.
+    The home page has to tell "has not chosen yet" apart from "chose the first one": a
+    first-time visitor should be asked where they are studying rather than shown one
+    country's records as though that country were the whole of Mira. Falling back to a
+    default is right for a deep link into /help, and wrong for the front door.
+    """
+    slug = request.cookies.get(LOCATION_COOKIE)
+    return repo.get_location(slug) if slug else None
+
+
 def location_slug(request: Request) -> Optional[str]:
     loc = current_location(request)
     return repo.location_id(loc.country, loc.city, loc.campus) if loc else None
@@ -70,8 +83,11 @@ def _has_illustrative(slug: Optional[str]) -> bool:
     return bool(repo.provenance_counts(slug).get(repo.ILLUSTRATIVE, 0))
 
 
-def base_context(request: Request, **extra) -> dict:
-    loc = current_location(request)
+def base_context(request: Request, no_location: bool = False, **extra) -> dict:
+    # no_location is for the home page before a location has been chosen. It is not the
+    # same as "no location resolved": current_location() would fall back to a default, and
+    # the default is exactly what must not be implied before the visitor has picked.
+    loc = None if no_location else current_location(request)
     slug = repo.location_id(loc.country, loc.city, loc.campus) if loc else None
     return {
         "request": request,
@@ -100,6 +116,23 @@ def set_location(slug: str, request: Request):
 
 @app.get("/")
 def home(request: Request):
+    # First visit: ask where they are studying rather than choosing for them. Picking a
+    # default would present one jurisdiction's records as though they were the whole
+    # product, and the entire point of the record model is that the answer depends on
+    # where you are. Deep links to /help or /needs still fall back to a default -- only
+    # the front door asks.
+    if chosen_location(request) is None:
+        return templates.TemplateResponse(
+            request=request,
+            name="index.html",
+            context=base_context(
+                request,
+                no_location=True,
+                choosing=True,
+                provenance_examples=repo.provenance_examples(),
+            ),
+        )
+
     slug = location_slug(request)
     return templates.TemplateResponse(
         request=request,
@@ -110,6 +143,10 @@ def home(request: Request):
             resource_count=len(repo.get_resources(slug)),
             support_count=len(repo.get_support_processes(slug)),
             area_count=len(repo.get_from_areas(slug)),
+            # The trust vocabulary belongs on the first screen, not only on /about. A
+            # judge should not have to go looking for the one mechanism the product is
+            # built around.
+            provenance_examples=repo.provenance_examples(slug),
         ),
     )
 

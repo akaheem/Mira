@@ -1,66 +1,5 @@
 [
   {
-    "id": "pk-lhr-s01",
-    "problem_key": "cant_pay_fees",
-    "display_name": "I can't pay my semester fee",
-    "country": "Pakistan",
-    "city": "Lahore",
-    "campus": "Mira Demo Campus",
-    "office_name": "Student Financial Aid Office",
-    "office_contact": "Ground floor, Administration Block",
-    "documents": [
-      "Student card or enrolment proof",
-      "Fee challan for the current semester",
-      "Household income certificate or salary slip",
-      "Copy of guardian's CNIC"
-    ],
-    "steps": [
-      "Collect the fee challan from the accounts office if you do not already have it.",
-      "Go to the Student Financial Aid Office and ask specifically about need-based assistance.",
-      "Submit the income certificate with the assistance form.",
-      "Ask which external schemes you can also be considered for - several run in parallel.",
-      "Get the expected decision date in writing before you leave."
-    ],
-    "timeline": "Usually decided within 2-4 weeks of a complete application.",
-    "jurisdiction": "Pakistan",
-    "jurisdiction_note": "In Pakistan, need-based support is normally routed through the university's financial aid office and may draw on external schemes such as PEEF, Bait-ul-Mal, or provincial endowments. The office name differs per institution.",
-    "source_url": null,
-    "source_name": "",
-    "source_date": "2026-09-20",
-    "provenance": "unverified"
-  },
-  {
-    "id": "pk-lhr-s02",
-    "problem_key": "scholarship_support",
-    "display_name": "I want to apply for a scholarship",
-    "country": "Pakistan",
-    "city": "Lahore",
-    "campus": "Mira Demo Campus",
-    "office_name": "Student Financial Aid Office",
-    "office_contact": "Ground floor, Administration Block",
-    "documents": [
-      "Student card or enrolment proof",
-      "Previous result card or transcript",
-      "Household income certificate",
-      "Copy of guardian's CNIC",
-      "Bank account details in your own name"
-    ],
-    "steps": [
-      "Ask the Financial Aid Office which schemes are currently open - they change through the year.",
-      "Check whether you qualify on merit, on need, or both; most schemes are one or the other.",
-      "Prepare every document before the deadline; incomplete applications are usually rejected outright.",
-      "Ask whether the same documents can be reused for more than one scheme.",
-      "Note the announcement date and check back rather than waiting to be contacted."
-    ],
-    "timeline": "Deadlines are scheme-specific. Ask for the current list with dates.",
-    "jurisdiction": "Pakistan",
-    "jurisdiction_note": "Pakistan runs multiple parallel scholarship schemes - national programmes, provincial endowments, and donor schemes. Each has separate eligibility and deadlines.",
-    "source_url": null,
-    "source_name": "",
-    "source_date": "2026-09-20",
-    "provenance": "unverified"
-  },
-  {
     "id": "pk-lhr-s03",
     "problem_key": "harassment_concern",
     "display_name": "I want to raise a harassment concern",
@@ -127,32 +66,305 @@
     "provenance": "verified"
   },
   {
-    "id": "pk-lhr-s04",
+    "id": "uk-mcr-s01",
+    "problem_key": "cant_pay_fees",
+    "display_name": "I can't pay my tuition or living costs",
+    "country": "United Kingdom",
+    "city": "Manchester",
+    "campus": "Mira Demo Campus",
+    "office_name": "The student services department at your university or college",
+    "office_contact": "They decide whether you qualify for extra money. Ask about the hardship fund.",
+    "documents": [],
+    "steps": [
+      "Contact the student services department at your university or college. They decide whether you qualify.",
+      "It is for students in financial hardship - for example students with children, especially single parents; mature students with existing financial commitments; students from a low-income family; disabled students; care leavers; and students who are homeless or living in a foyer.",
+      "The amount you can get is decided by your university or college, not by a national formula.",
+      "It is usually paid as a lump sum or in instalments.",
+      "You will not usually have to pay the money back, but in some cases you will get a loan that you have to repay."
+    ],
+    "timeline": "",
+    "jurisdiction": "England",
+    "jurisdiction_note": "Higher education funding is devolved in the UK, so this is the England route. GOV.UK states that the amount is decided by the university or college, not nationally.",
+    "source_url": "https://www.gov.uk/extra-money-university-college-study",
+    "source_name": "GOV.UK - Extra money from your university or college to study",
+    "source_date": "2026-09-22",
+    "provenance": "verified"
+  },
+  {
+    "id": "uk-mcr-s02",
+    "problem_key": "harassment_concern",
+    "display_name": "I want to report harassment or sexual misconduct",
+    "country": "United Kingdom",
+    "city": "Manchester",
+    "campus": "Mira Demo Campus",
+    "office_name": "Your university or college, and then the Office of the Independent Adjudicator (OIA)",
+    "office_contact": "Raise it with your provider first. The OIA is the next step if the provider's own complaints process does not resolve it.",
+    "documents": [],
+    "steps": [
+      "Raise it first with your university or college. The Office for Students' student guidance states you should do so by raising it with them.",
+      "Your provider must provide a process for reporting an incident of harassment or sexual misconduct, and must publish it in a single comprehensive source of information that is accessible at all times.",
+      "The published information must set out the ways students can report, and the timescales for investigation and decision-making, including factors that may affect those timescales.",
+      "If you are unhappy with how a report was handled, go through your university or college's own complaints process.",
+      "If that does not resolve the issue, you can raise the matter with the Office of the Independent Adjudicator (OIA)."
+    ],
+    "timeline": "The provider sets the timescales and must publish them. Condition E6 imposes no fixed deadlines on providers, so there is no single national figure for how long this takes.",
+    "jurisdiction": "England",
+    "jurisdiction_note": "Higher education regulation is devolved in the UK, so this is the England route. Condition E6 of the Office for Students' conditions of registration has applied to all providers registered with the OfS since 1 August 2025.",
+    "source_url": "https://www.officeforstudents.org.uk/for-providers/student-protection-and-choice/harassment-and-sexual-misconduct/condition-e6-harassment-and-sexual-misconduct/",
+    "source_name": "Office for Students - Condition E6: Harassment and sexual misconduct",
+    "source_date": "2026-09-22",
+    "additional_sources": [
+      {
+        "name": "Office for Students - Harassment and sexual misconduct: a guide for students (Raising an issue)",
+        "url": "https://www.officeforstudents.org.uk/for-students/student-rights/harassment-and-sexual-misconduct-a-guide-for-students/raising-an-issue/",
+        "date": "2026-09-22"
+      }
+    ],
+    "provenance": "verified"
+  },
+  {
+    "id": "uk-mcr-s03",
     "problem_key": "academic_dispute",
-    "display_name": "I have a problem with a grade or an academic decision",
+    "display_name": "I want to appeal or complain about an academic decision",
+    "country": "United Kingdom",
+    "city": "Manchester",
+    "campus": "Mira Demo Campus",
+    "office_name": "Your provider's complaints or appeals procedure, then the Office of the Independent Adjudicator (OIA)",
+    "office_contact": "The OIA can normally only look at a complaint once your provider's own procedures are complete. You will never be charged for an OIA review.",
+    "documents": [
+      "The Completion of Procedures Letter from your provider",
+      "A copy of the final decision you received",
+      "A completed OIA Complaint Form"
+    ],
+    "steps": [
+      "Complete your provider's own complaints or appeals procedures first. The OIA normally needs a Completion of Procedures Letter, which your provider sends you once you have finished them.",
+      "In exceptional circumstances the OIA may look at a complaint where internal procedures are not finished - for example if the provider has unduly delayed, or if there is evidence it may be obstructing the complaint.",
+      "Submit a completed OIA Complaint Form within 12 months of the date of your provider's final decision. That is usually the date of the Completion of Procedures Letter.",
+      "You can submit the form through MyOIA, or download it and send it by email or post. If you post it, keep proof of posting.",
+      "The OIA will write to you to confirm it has received the complaint, and then decide whether it is one it can look at under its Rules."
+    ],
+    "timeline": "There is a hard deadline: 12 months from your provider's final decision. No fixed timescale is stated for the review itself - the OIA says it can take a number of months to complete its reviews.",
+    "jurisdiction": "England and Wales",
+    "jurisdiction_note": "The OIA is the designated student complaints scheme for England and Wales under the Higher Education Act 2004. Scotland and Northern Ireland have different arrangements.",
+    "source_url": "https://www.oiahe.org.uk/students/how-to-complain-to-us/",
+    "source_name": "Office of the Independent Adjudicator - How to complain to us",
+    "source_date": "2026-09-22",
+    "additional_sources": [
+      {
+        "name": "Office of the Independent Adjudicator - Who can complain to us",
+        "url": "https://www.oiahe.org.uk/about-us/reviewing-complaints/who-can-complain-to-us/",
+        "date": "2026-09-22"
+      }
+    ],
+    "provenance": "verified"
+  },
+  {
+    "id": "uk-mcr-s04",
+    "problem_key": "scholarship_support",
+    "display_name": "I want to apply for a scholarship or bursary",
+    "country": "United Kingdom",
+    "city": "Manchester",
+    "campus": "Mira Demo Campus",
+    "office_name": "Your student support service",
+    "office_contact": "Ask what is available at your own institution. There is no national scheme to apply to separately.",
+    "documents": [],
+    "steps": [
+      "There is no national scholarship scheme for higher education in the UK. Each university or college sets its own rules for bursaries, scholarships and awards.",
+      "Those rules decide who qualifies, how much you can get, and how you apply.",
+      "Talk to your student support service to find out what is available where you study.",
+      "Any money you get is paid directly to you by your university or college, on top of student finance such as student loans."
+    ],
+    "timeline": "",
+    "jurisdiction": "England",
+    "jurisdiction_note": "Higher education funding is devolved in the UK. GOV.UK's position for England is that bursaries and scholarships are set by each institution rather than by any national scheme, so there is no single application route to point at.",
+    "source_url": "https://www.gov.uk/extra-money-university-college-study",
+    "source_name": "GOV.UK - Extra money from your university or college to study",
+    "source_date": "2026-09-22",
+    "provenance": "verified"
+  },
+  {
+    "id": "uk-mcr-s05",
+    "problem_key": "hostel_problem",
+    "display_name": "I have a problem with my accommodation",
+    "country": "United Kingdom",
+    "city": "Manchester",
+    "campus": "Mira Demo Campus",
+    "office_name": "The tenancy deposit scheme holding your deposit, or your provider for university halls",
+    "office_contact": "For private renting, contact the scheme your deposit is protected in. For halls, use your provider's own complaints process.",
+    "documents": [],
+    "steps": [
+      "If you rent privately, your landlord must put your deposit in a government-approved tenancy deposit scheme within 30 days of getting it.",
+      "Your landlord must return your deposit within 10 days of you both agreeing how much you will get back.",
+      "If you disagree about the amount, the scheme offers a free dispute resolution service. Both you and the landlord must agree to use it, and the decision it makes is final.",
+      "There may be a limit on how long you have to raise a dispute. The scheme does not publish a fixed period, so contact it as soon as possible.",
+      "If your deposit was never protected at all, write to your landlord and letting agent first. You may then be able to apply to your local county court to get it back."
+    ],
+    "timeline": "30 days for your landlord to protect the deposit, and 10 days to return it once you both agree. The dispute service's own time limit is not published.",
+    "jurisdiction": "England",
+    "jurisdiction_note": "Housing law is devolved, so this is the England position. It covers private renting on an assured periodic tenancy, which replaced assured shorthold tenancies on 1 May 2026. University halls are not covered by this route - those go through your provider's complaints process and can escalate to the OIA.",
+    "source_url": "https://www.gov.uk/tenancy-deposit-protection",
+    "source_name": "GOV.UK - Tenancy deposit protection",
+    "source_date": "2026-09-22",
+    "additional_sources": [
+      {
+        "name": "GOV.UK - Tenancy deposit protection: disputes and problems",
+        "url": "https://www.gov.uk/tenancy-deposit-protection/disputes-and-problems",
+        "date": "2026-09-22"
+      }
+    ],
+    "provenance": "verified"
+  },
+  {
+    "id": "uk-mcr-s06",
+    "problem_key": "health_concern",
+    "display_name": "I need health or counselling support",
+    "country": "United Kingdom",
+    "city": "Manchester",
+    "campus": "Mira Demo Campus",
+    "office_name": "Your university or college counselling service, and your GP",
+    "office_contact": "Details are usually in the counselling service section of your university's website.",
+    "documents": [],
+    "steps": [
+      "Many colleges and most universities have a free and confidential in-house counselling service, staffed by qualified counsellors and psychotherapists. It is available to both undergraduates and postgraduates.",
+      "Many universities also have a mental health adviser who can help you access the support you need.",
+      "You may be entitled to reasonable adjustments such as extra time in exams, extensions on coursework, and specialist mental health mentor support.",
+      "For NHS support you can refer yourself to NHS talking therapies for anxiety and depression, or ask your GP to refer you. Self-referral is open to people who live in England and are 18 or over, or 16 or 17 in some areas, and you do not need a diagnosed mental health condition.",
+      "At UK universities you can apply for Disabled Students' Allowance (DSA), which requires evidence of a long-term mental health condition. A mental health adviser can help you apply."
+    ],
+    "timeline": "",
+    "jurisdiction": "England",
+    "jurisdiction_note": "Health is devolved in the UK, so the NHS routes here are the England ones. The university counselling service itself is provided by the institution rather than by the health service.",
+    "source_url": "https://www.nhs.uk/mental-health/children-and-young-adults/help-for-teenagers-young-adults-and-students/student-mental-health-counselling/",
+    "source_name": "NHS - Student mental health and counselling",
+    "source_date": "2026-09-22",
+    "additional_sources": [
+      {
+        "name": "NHS - Find NHS talking therapies for anxiety and depression",
+        "url": "https://www.nhs.uk/nhs-services/mental-health-services/find-nhs-talking-therapies-for-anxiety-and-depression/",
+        "date": "2026-09-22"
+      }
+    ],
+    "provenance": "verified"
+  },
+  {
+    "id": "pk-lhr-s01",
+    "problem_key": "cant_pay_fees",
+    "display_name": "I can't pay my tuition or semester fee",
     "country": "Pakistan",
     "city": "Lahore",
     "campus": "Mira Demo Campus",
-    "office_name": "Departmental office, then the relevant faculty office",
-    "office_contact": "Your department's main office",
+    "office_name": "Pakistan Bait-ul-Mal, applied for through your educational institution",
+    "office_contact": "Applications are received through your institution's committee or its head, not by walking into PBM yourself.",
     "documents": [
-      "Student card",
-      "The marked script, result, or the decision you are querying",
-      "Any correspondence about it"
+      "PBM Bonafide Certificate, completed by your institution - it is rejected if it has any cutting, overwriting or tampering",
+      "An affidavit on stamp paper",
+      "Attested copies of your educational certificates",
+      "Details of your institution's fees",
+      "Photocopy of your CNIC",
+      "Previous academic degrees and your last semester or year result",
+      "If you are under 18, a copy of Form 'B' and an application from your parent or guardian"
     ],
     "steps": [
-      "Ask your department office what the formal recheck or appeal route is - it differs by faculty.",
-      "Request the process in writing, including the deadline, before you raise the substance.",
-      "Speak to your academic advisor if you have one; they can tell you whether the query is worth pursuing.",
-      "Submit within the stated window. Late appeals are usually refused on timing alone."
+      "Pakistan Bait-ul-Mal's published requirements state that applications are received through the educational institution - either the committee it has constituted or its head. The application is addressed to the Managing Director, Pakistan Bait-ul-Mal.",
+      "Your institution completes a PBM Bonafide Certificate, which must be attached to the application. PBM states the certificate will not be accepted if any cutting, overwriting or tampering has been made.",
+      "PBM states this assistance is for poor deserving students studying in government institutions. Its form states that private and self-finance or self-sustained students are not eligible.",
+      "You are also not eligible if your father, mother or guardian is a government employee, or if you are already receiving financial assistance from any other government department or institution.",
+      "The fee heads PBM covers are admission fee (first semester or year only), tuition fee, examination fee, registration fee (first semester or year only), library fee (non-refundable only), and transport charges. Transport and hostel charges cannot both be claimed.",
+      "Only the first semester or first year fee you have already paid is reimbursed to you, and only on production of a paid receipt. PBM states that all remaining semesters or years are paid by PBM to the institution, not reimbursed to you by the institution.",
+      "If you fail any subject while receiving this assistance, PBM's requirements state that you are no longer eligible for education assistance in future."
     ],
-    "timeline": "Appeal windows are short and set per faculty. Confirm the deadline first.",
+    "timeline": "",
     "jurisdiction": "Pakistan",
-    "jurisdiction_note": "Processes are institution- and faculty-specific rather than set by national statute, so this route must be confirmed locally for any given campus.",
-    "source_url": null,
-    "source_name": "",
-    "source_date": "2026-09-20",
-    "provenance": "unverified"
+    "jurisdiction_note": "Pakistan Bait-ul-Mal is a federal body under the Ministry of Poverty Alleviation and Social Safety, Government of Pakistan. Its published requirements apply to students in government institutions; private institutions and other countries have different arrangements.",
+    "source_url": "https://www.pbm.gov.pk/Forms.html",
+    "source_name": "Pakistan Bait-ul-Mal (Government of Pakistan) - How to Get Assistance",
+    "source_date": "2026-09-22",
+    "additional_sources": [
+      {
+        "name": "Pakistan Bait-ul-Mal - Bonafide Certificate for Education Assistance (form PBM-QMS-IFA(Edu)F-01)",
+        "url": "https://www.pbm.gov.pk/images/AllForms/proforma-pdf/education-assistance.pdf",
+        "date": "2026-09-22"
+      },
+      {
+        "name": "Pakistan Bait-ul-Mal - Education Assistance requirements notice (Urdu)",
+        "url": "https://www.pbm.gov.pk/images/AllForms/criteria/education-assistance.jpg",
+        "date": "2026-09-22"
+      }
+    ],
+    "provenance": "verified"
+  },
+  {
+    "id": "pk-lhr-s02",
+    "problem_key": "scholarship_support",
+    "display_name": "I want to apply for a scholarship or financial aid",
+    "country": "Pakistan",
+    "city": "Lahore",
+    "campus": "Mira Demo Campus",
+    "office_name": "The Financial Aid Office at your university or institution",
+    "office_contact": "You apply through your institution. HEC states it will not accept any application form directly.",
+    "documents": [],
+    "steps": [
+      "For the HEC Need-Based Scholarship you receive the application form from the Financial Aid Office at the participating university or institution. HEC's eligibility page states the complete application should be sent to the Financial Aid Office where you intend to secure admission.",
+      "You submit the completed form, with supporting documents, to that same Financial Aid Office at the university - not to HEC.",
+      "HEC states plainly that it will not accept any application form directly, and that funds are not transferred directly to students by HEC. Payment is made to students through the participating universities or institutions.",
+      "It is for undergraduate study (4-5 year programmes) in all disciplines, and your eligibility is linked to your financial need as assessed by the institution's scholarship award committee, not by HEC.",
+      "HEC states that students who secure admission on self-finance are not eligible for this programme.",
+      "HEC also runs other schemes, including the Benazir Undergraduate Scholarship, applied for through your institution rather than to HEC."
+    ],
+    "timeline": "",
+    "jurisdiction": "Pakistan",
+    "jurisdiction_note": "The Higher Education Commission is Pakistan's federal higher education regulator. HEC publishes no application deadline for either scheme - the timing is set by the institution's Financial Aid Office. HEC's page for the Benazir Undergraduate Scholarship directs applicants to an online portal at ehsaas.hec.gov.pk, which did not respond when checked on 22 September 2026, so confirm which schemes are currently open with your Financial Aid Office.",
+    "source_url": "https://www.hec.gov.pk/english/scholarshipsgrants/NBS/Pages/How-To-Apply.aspx",
+    "source_name": "Higher Education Commission (Pakistan) - Need-Based Scholarship: How to Apply",
+    "source_date": "2026-09-22",
+    "additional_sources": [
+      {
+        "name": "Higher Education Commission - Need-Based Scholarship: Eligibility Criteria",
+        "url": "https://www.hec.gov.pk/english/scholarshipsgrants/NBS/Pages/Eligibility-Criteria.aspx",
+        "date": "2026-09-22"
+      },
+      {
+        "name": "Higher Education Commission - Benazir (Ehsaas) Undergraduate Scholarship: Award Process",
+        "url": "https://www.hec.gov.pk/english/scholarshipsgrants/Ehsaas/Pages/Scholarship-Award-Process.aspx",
+        "date": "2026-09-22"
+      }
+    ],
+    "provenance": "verified"
+  },
+  {
+    "id": "pk-lhr-s04",
+    "problem_key": "academic_dispute",
+    "display_name": "I want to challenge a grade or an academic decision",
+    "country": "Pakistan",
+    "city": "Lahore",
+    "campus": "Mira Demo Campus",
+    "office_name": "Your institution's grievance committee, through the Head of your Department",
+    "office_contact": "HEC's policy guidelines set out the committee and the deadlines. Your institution constitutes it.",
+    "documents": [],
+    "steps": [
+      "HEC's policy guidelines for the uniform semester system state that every higher education institution should have a five-member committee to redress student grievances about a course instructor, grades, or any other issue. It is made up of two senior faculty members, the relevant head of department and dean, and is headed by the Controller of Examinations.",
+      "For a grade, you must submit your grievance application in writing to the Head of your Department within seven working days of receiving the grade.",
+      "The Head of Department forwards the application to the committee. The guidelines state it is mandatory for the committee to hear both sides - you and the instructor.",
+      "The committee must give its final decision within five working days, or before the start of registration for the new semester, whichever comes earlier.",
+      "The guidelines state that the committee's decision is deemed final and binding on all parties.",
+      "On re-checking, the guidelines state that an answer book shall not be re-assessed under any circumstances. Re-checking is not re-evaluation or re-marking: it covers only points such as computational errors in the total, totals not carried forward correctly, answers left unmarked, or marks that do not tally with the marks sheet.",
+      "The guidelines state that you have no right to see or examine your answer book. They also state that your marks could decrease as a result of re-checking, in which case the record is corrected and a revised transcript is issued.",
+      "HEC also runs a Students Grievance Redressal Portal where you can log a grievance, including unfair evaluation, fee issues and admission problems. HEC states these are responded to by institution focal persons."
+    ],
+    "timeline": "Seven working days to submit a grade grievance; five working days for the committee's decision, or before registration for the new semester, whichever is earlier.",
+    "jurisdiction": "Pakistan",
+    "jurisdiction_note": "These are HEC's policy guidelines for implementing the uniform semester system in higher education institutions in Pakistan. The document is written as guidance to institutions; unlike HEC's drug and tobacco policy, it does not state that it is binding. Deadlines and forums differ in other countries.",
+    "source_url": "https://www.hec.gov.pk/english/services/universities/Documents/Final%20Examination%20Policy%20Guidelines.pdf",
+    "source_name": "Higher Education Commission (Pakistan) - Policy Guidelines for Implementation of Uniform Semester System in HEIs of Pakistan",
+    "source_date": "2026-09-22",
+    "additional_sources": [
+      {
+        "name": "Higher Education Commission - Students Grievance Redressal Portal",
+        "url": "https://www.hec.gov.pk/english/services/students/Pages/GRP.aspx",
+        "date": "2026-09-22"
+      }
+    ],
+    "provenance": "verified"
   },
   {
     "id": "pk-lhr-s05",
@@ -161,8 +373,8 @@
     "country": "Pakistan",
     "city": "Lahore",
     "campus": "Mira Demo Campus",
-    "office_name": "Directorate of Student Affairs / Hostel Warden",
-    "office_contact": "Hostel warden's office, or Room 12 in the Student Affairs Office",
+    "office_name": "Your institution's hostel warden, then student affairs",
+    "office_contact": "Offices and titles differ by institution. Confirm your own institution's route locally.",
     "documents": [
       "Student card",
       "Room allocation slip or hostel receipt"
@@ -170,15 +382,15 @@
     "steps": [
       "Raise maintenance issues with the warden first and ask for a complaint reference.",
       "For anything involving safety or another resident, ask to see the warden in person rather than reporting it in a group.",
-      "If the warden does not resolve it, take it to the Directorate of Student Affairs.",
+      "If the warden does not resolve it, take it to the office responsible for student affairs at your institution.",
       "Keep a written note of dates and who you spoke to."
     ],
-    "timeline": "Varies. Ask for a reference number so you can follow up.",
+    "timeline": "",
     "jurisdiction": "Pakistan",
-    "jurisdiction_note": "Hostel governance is institution-specific.",
-    "source_url": null,
+    "jurisdiction_note": "HEC publishes no general student accommodation policy. A review of HEC's published policies and student services found no hostel or residence policy; the closest provision is in HEC's policy for students with disabilities, which requires institutions to provide on-campus hostel facilities to students with disabilities. There is therefore no national procedure for a hostel complaint that Mira can cite, and this record stays unverified.",
+    "source_url": "",
     "source_name": "",
-    "source_date": "2026-09-20",
+    "source_date": "",
     "provenance": "unverified"
   },
   {
@@ -188,107 +400,30 @@
     "country": "Pakistan",
     "city": "Lahore",
     "campus": "Mira Demo Campus",
-    "office_name": "Campus Medical Centre / Student Counselling Service",
-    "office_contact": "Medical Centre, Administration Block. Counselling: Room 18, Student Affairs Office.",
-    "documents": [
-      "Student card"
-    ],
+    "office_name": "Your institution's Focal Person, and its on-campus counsellor, psychologist or psychiatrist",
+    "office_contact": "HEC's policy requires every institution to designate a Focal Person and to have an on-campus counsellor, psychologist or psychiatrist.",
+    "documents": [],
     "steps": [
-      "Walk in to the Medical Centre for anything urgent - no appointment needed during opening hours.",
-      "For counselling, book an appointment; walk-in slots are limited.",
-      "Counselling is confidential and is not recorded on your academic file.",
-      "For women's health specifically, the Women's Health Clinic runs separate hours with female staff."
+      "HEC's Policy on Drug and Tobacco Abuse states that it is binding on all higher education institutions in Pakistan, whether public or private, under the Higher Education Commission Ordinance 2002.",
+      "The policy requires each institution to appoint a Focal Person from its administration. It states that if a student feels they need medical or mental health assistance and counselling, they may reach out to the Focal Person, who will connect them to the services requested.",
+      "The policy requires an on-campus counsellor, psychologist or psychiatrist. It states that any student suffering from mental health issues such as anxiety, depression or post-traumatic stress disorder may seek their assistance, and that they may refer the student on to rehabilitative services.",
+      "The policy also requires every institution to establish a helpline that students can call when they face a mental health issue. It is staffed by a trained counsellor.",
+      "The policy states that students who seek support from the Focal Person, the counsellor, or the helpline receive counselling on a confidential basis.",
+      "HEC has separately published a national youth helpline on 0800-69457, described as toll-free and confidential, providing psychosocial support and counselling to young people."
     ],
-    "timeline": "Medical Centre: walk-in during opening hours. Counselling: appointment usually within a week.",
+    "timeline": "HEC required institutions to constitute the committee and appoint the Focal Person by 31 October 2021, and to have an on-campus counsellor/psychologist/psychiatrist and a helpline in place by 1 December 2021.",
     "jurisdiction": "Pakistan",
-    "jurisdiction_note": "Provision varies widely between institutions.",
-    "source_url": null,
-    "source_name": "",
-    "source_date": "2026-09-20",
-    "provenance": "unverified"
-  },
-
-  {
-    "id": "uk-mcr-s01",
-    "problem_key": "cant_pay_fees",
-    "display_name": "I can't pay my tuition or living costs",
-    "country": "United Kingdom",
-    "city": "Manchester",
-    "campus": "Mira Demo Campus",
-    "office_name": "Student Money Advice Team",
-    "office_contact": "Student Hub, ground floor",
-    "documents": [
-      "Student ID",
-      "Evidence of income and outgoings",
-      "Bank statements for the last three months"
+    "jurisdiction_note": "The source is HEC's Policy on Drug and Tobacco Abuse in Higher Education Institutions, which states it is binding on all higher education institutions in Pakistan, public and private. Its mental health provisions are written generally, but the policy itself is framed around drug and tobacco abuse. Other countries route student mental health support differently - in England, for example, through the NHS.",
+    "source_url": "https://www.hec.gov.pk/english/Documents/Policy%20on%20drugs%20and%20tobacco%20control%20at%20HEIs.pdf",
+    "source_name": "Higher Education Commission (Pakistan) - Policy on Drug and Tobacco Abuse in Higher Education Institutions",
+    "source_date": "2026-09-22",
+    "additional_sources": [
+      {
+        "name": "Higher Education Commission - National Youth Helpline (HEC news item, 1 November 2022)",
+        "url": "https://www.hec.gov.pk/english/news/news/Pages/National-Youth-Helpline.aspx",
+        "date": "2026-09-22"
+      }
     ],
-    "steps": [
-      "Contact the Student Money Advice Team before the deadline passes - options narrow once you are in arrears.",
-      "Ask about the university hardship fund, which is separate from your student loan.",
-      "Ask about payment plans if a lump sum is the problem rather than total affordability.",
-      "Check whether you are eligible for any bursary you have not claimed."
-    ],
-    "timeline": "Hardship fund decisions typically take 2-4 weeks.",
-    "jurisdiction": "United Kingdom",
-    "jurisdiction_note": "In the UK, support typically comes through a university hardship fund plus the Student Loans Company, and is separate from academic fees policy.",
-    "source_url": null,
-    "source_name": "",
-    "source_date": "2026-09-20",
-    "provenance": "unverified"
-  },
-  {
-    "id": "uk-mcr-s02",
-    "problem_key": "harassment_concern",
-    "display_name": "I want to report harassment or sexual misconduct",
-    "country": "United Kingdom",
-    "city": "Manchester",
-    "campus": "Mira Demo Campus",
-    "office_name": "Report and Support",
-    "office_contact": "Online reporting form, or a named contact in the Student Hub",
-    "documents": [
-      "Any evidence you choose to provide"
-    ],
-    "steps": [
-      "You do not need to prepare anything to make a report. Reporting and providing evidence are separate steps.",
-      "You can report anonymously or named - anonymous reports are still recorded and acted on where possible.",
-      "You can report to the university, to the police, or both; they are separate routes.",
-      "Independent advice is available from the Students' Union, separately from the university.",
-      "Ask what support is available whether or not you choose to pursue a formal process."
-    ],
-    "timeline": "Varies by route. Ask what to expect at the point of reporting.",
-    "jurisdiction": "United Kingdom",
-    "jurisdiction_note": "UK universities typically maintain a Report and Support service, and are regulated on how they handle student complaints and misconduct. Routes and terminology differ per institution.",
-    "source_url": null,
-    "source_name": "",
-    "source_date": "2026-09-20",
-    "provenance": "unverified"
-  },
-  {
-    "id": "uk-mcr-s03",
-    "problem_key": "academic_dispute",
-    "display_name": "I want to appeal an academic decision",
-    "country": "United Kingdom",
-    "city": "Manchester",
-    "campus": "Mira Demo Campus",
-    "office_name": "Academic Appeals Office",
-    "office_contact": "Student Hub, or via your faculty office",
-    "documents": [
-      "Student ID",
-      "The decision letter or result you are appealing",
-      "Any supporting evidence"
-    ],
-    "steps": [
-      "Check the deadline first - UK appeal windows are typically short and strictly applied.",
-      "Note that appeals are usually limited to specific grounds such as procedural error or mitigating circumstances, not disagreement with academic judgement.",
-      "Speak to your personal tutor or the Students' Union advice centre before submitting.",
-      "Submit in writing and keep a copy."
-    ],
-    "timeline": "Strict, short windows. Confirm the exact deadline before doing anything else.",
-    "jurisdiction": "United Kingdom",
-    "jurisdiction_note": "UK appeal grounds are formally limited and differ from a general complaint. The distinction matters and is institution-specific.",
-    "source_url": null,
-    "source_name": "",
-    "source_date": "2026-09-20",
-    "provenance": "unverified"
+    "provenance": "verified"
   }
 ]

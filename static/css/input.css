@@ -504,6 +504,37 @@
     @apply mt-6 rounded-2xl border border-sand-300 bg-sand-50 p-5;
   }
 
+  /* The trust strip on the home page: three real records, one per provenance state, so
+     the vocabulary is met on the first screen instead of only on /about.
+
+     A two-column grid rather than a chip followed by a line of text, because the three
+     chips have different widths -- "Verified" against "Not yet verified". Left to flow on
+     their own, the three meanings would start at three different x-positions and read as
+     three unrelated remarks instead of as one vocabulary with three values. */
+  .prov-strip {
+    @apply m-0 mt-4 list-none space-y-3 p-0;
+  }
+
+  .prov-strip-row {
+    @apply grid gap-x-3 gap-y-1;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 30rem) {
+    .prov-strip-row {
+      grid-template-columns: 10rem 1fr;
+      align-items: start;
+    }
+  }
+
+  .prov-strip-body {
+    @apply flex flex-wrap items-center gap-x-2 gap-y-1;
+  }
+
+  .prov-strip-meaning {
+    @apply w-full text-[15px] leading-relaxed text-quiet;
+  }
+
   .office {
     @apply m-0 text-[18px] font-semibold text-ink;
   }

@@ -6,15 +6,43 @@
 {% block content %}
   {{ m.demo_banner(is_demo) }}
 
-  <section class="hero">
-    <h1 class="hero-title">What do you need right now?</h1>
-    <p class="hero-sub">
-      {% if location %}
-        You are looking at <strong>{{ location.campus }}</strong>, {{ location.city }}.
-      {% endif %}
-      No account needed.
-    </p>
-  </section>
+  {% if choosing %}
+    {#
+      First visit. No jurisdiction is pre-selected -- showing one country's records before
+      the visitor has said where they are would present that country as the whole product,
+      and the point of the record model is that the answer depends on where you are. Each
+      location states its country, so the fact that Mira covers more than one is legible on
+      the first screen instead of hidden behind a dropdown.
+    #}
+    <section class="hero">
+      <h1 class="hero-title">What do you need right now?</h1>
+      <p class="hero-sub">
+        Choose where you are studying. Mira documents processes that differ by country and
+        by campus, so the answer depends on where you are.
+      </p>
+    </section>
+
+    <nav class="choices" aria-label="Choose where you are studying">
+      {% for loc in locations %}
+        <a class="choice" href="/set-location/{{ loc.slug }}">
+          <span class="choice-icon" aria-hidden="true">&#9679;</span>
+          <span class="choice-body">
+            <span class="choice-title">{{ loc.campus }}</span>
+            <span class="choice-desc">{{ loc.city }}, {{ loc.country }}</span>
+          </span>
+        </a>
+      {% endfor %}
+    </nav>
+  {% else %}
+    <section class="hero">
+      <h1 class="hero-title">What do you need right now?</h1>
+      <p class="hero-sub">
+        {% if location %}
+          You are looking at <strong>{{ location.campus }}</strong>, {{ location.city }}.
+        {% endif %}
+        No account needed.
+      </p>
+    </section>
 
   <nav class="choices" aria-label="Choose what you need">
 
@@ -60,14 +88,48 @@
     </a>
 
   </nav>
+  {% endif %}
 
   <section class="principle">
     <h2 class="principle-title">How Mira is different</h2>
     <p>
       Every fact here shows <strong>where it came from</strong> and <strong>when it was
-      last checked</strong>. Where Mira does not have a source, it says so on the card
-      instead of quietly filling the gap. An unverified answer you can see is more useful
-      than a confident one you cannot check.
+      last checked</strong>. Each one carries exactly one of three states:
+    </p>
+
+    {% if provenance_examples %}
+      {#
+        Live examples, deliberately not a legend.
+
+        Each row is a real record pulled from the dataset and linked to its own card, so a
+        reader can go and check that the marker means what this strip says it means. A
+        hand-written legend would be a claim *about* the app; these are the app. It also
+        cannot drift: promoting a record to Verified changes this strip on the next
+        request, with no second place to remember to update.
+      #}
+      <ul class="prov-strip">
+        {% for ex in provenance_examples %}
+          <li class="prov-strip-row">
+            <span class="chip chip-{{ ex.state }}">
+              <span class="chip-mark" aria-hidden="true">{{ ex.marker }}</span>
+              {{ ex.label }}
+            </span>
+            <span class="prov-strip-body">
+              <a class="link" href="{{ ex.href }}">{{ ex.title }}</a>
+              {% if ex.jurisdiction and ex.jurisdiction != "demo environment" %}
+                <span class="chip chip-jurisdiction">Applies in {{ ex.jurisdiction }}</span>
+              {% endif %}
+              <span class="prov-strip-meaning">{{ ex.meaning }}</span>
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <p>
+      Where Mira does not have a source, it says so on the card instead of quietly filling
+      the gap. An unverified answer you can see is more useful than a confident one you
+      cannot check.
     </p>
   </section>
 {% endblock %}

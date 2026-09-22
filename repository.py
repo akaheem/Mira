@@ -32,6 +32,7 @@ from models import (  # noqa: F401
     PROVENANCE_HINTS,
     PROVENANCE_LABELS,
     PROVENANCE_MARKERS,
+    PROVENANCE_MEANINGS,
     PROVENANCE_STATES,
     RESOURCE_CATEGORIES,
     STALE_AFTER_DAYS,
@@ -119,6 +120,52 @@ def provenance_counts(slug: Optional[str] = None) -> dict[str, int]:
             state = record.provenance_state
             counts[state] = counts.get(state, 0) + 1
     return counts
+
+
+def provenance_examples(slug: Optional[str] = None) -> list[dict]:
+    """One real record per provenance state, for the trust strip on the home page.
+
+    The three states are the whole trust model, and a reader should meet them on the first
+    screen rather than having to find /about. The examples are read from live data rather
+    than written into the template, for two reasons: the strip cannot drift from what the
+    app actually shows, and promoting a record to `verified` shows up here the moment the
+    data changes.
+
+    Prefers examples from the current location, then falls back to the whole dataset for a
+    state this location has none of. The fallback is load-bearing rather than generous:
+    Manchester currently has no verified process, so without it the strip would silently
+    drop a row there -- and a trust explainer that quietly shows two of its three states
+    teaches the wrong lesson on the one screen that exists to teach it. Every entry is a
+    real record with a real link, so a reader can go and check the claim.
+    """
+    near = (*get_resources(slug), *get_support_processes(slug))
+    everywhere = (*get_resources(), *get_support_processes())
+
+    examples: list[dict] = []
+    for state in PROVENANCE_STATES:
+        record = next((r for r in near if r.provenance_state == state), None)
+        if record is None:
+            record = next((r for r in everywhere if r.provenance_state == state), None)
+        if record is None:
+            continue
+
+        if isinstance(record, SupportProcess):
+            title = record.display_name
+            href = f"/help/topic/{record.problem_key}"
+        else:
+            title = record.name
+            href = f"/needs/{record.category}"
+
+        examples.append({
+            "state": state,
+            "marker": record.provenance_marker,
+            "label": record.provenance_label,
+            "meaning": PROVENANCE_MEANINGS.get(state, ""),
+            "title": title,
+            "href": href,
+            "jurisdiction": record.jurisdiction,
+        })
+    return examples
 
 
 # --------------------------------------------------------------------------------------
