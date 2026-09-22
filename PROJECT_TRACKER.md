@@ -939,6 +939,14 @@ Prioritise in this order:
 Current state is **1 verified of 36**, which means the trust model works but is nearly
 invisible. That is the submission-quality bottleneck, not the feature count.
 
+> **COMPLETE — 2026-09-22.** Both batches are done and recorded: **UK in §14e** (6 records,
+> 6 verified) and **Pakistan in §14f** (5 records, 4 verified, 1 deliberately left
+> `unverified`). The project stands at **11 verified of 12 Flow C processes** — inside the
+> 8–12 target, reached without relaxing the bar. The order above was followed as written;
+> note that the *reason* it named Flow C alone did not hold up, and §14c's original plan had
+> to be corrected before it could push anyone toward fabrication — see the structural finding
+> recorded earlier in this section.
+
 **Method — the owner's sequence, followed exactly, per record:**
 
 ```
@@ -1121,6 +1129,39 @@ PBM's institutional channel in Pakistan and through the university's hardship fu
 grades go to a statutory-deadline committee in Pakistan and to the OIA after internal
 procedures in England and Wales; a scholarship is a national HEC programme in Pakistan and
 **does not exist nationally** in England. That is the model demonstrated rather than asserted.
+
+### 14g. Redeploy and production re-validation — **2026-09-22**
+
+**Commit `20e4da6` pushed to `main`; production redeployed and re-verified.** The live site had
+been running the pre-trust-strip build, so local and production had diverged — the strip and
+the neutral first screen existed only on disk until this deploy.
+
+| Check, against `https://mira-student-support.vercel.app` | Result |
+|---|---|
+| All routes (`/`, `/help`, two topic cards, `/needs`, `/journey`, `/about`) | **200** |
+| `/static/css/styles.css` | **200, `text/css`, 30,664 B** — a static CDN asset, not routed through the Python function |
+| Neutral first screen | **live** — chooser present, no resolved-location line |
+| Trust strip | **3 rows**, all three chips (`chip-verified` / `chip-illustrative` / `chip-unverified`) |
+| PK cards: PBM source, HEC scholarship route, 7/5-working-day deadline, binding policy, hostel `!` | **all rendering** |
+| UK cards: OIA + 12 months, verified negative, hardship fund | **all rendering** |
+| Jurisdiction tags differ by card | **Pakistan vs England** |
+
+**Two deployment facts worth keeping, because both cost time and would cost it again:**
+
+- **A preview deployment is behind Vercel Authentication by default.** Fetching a preview URL
+  returns `200 text/html` at ~341 KB on *every* path — including the `.css` path — with title
+  `Login – Vercel`. That signature looks alarming (it resembles D27: every route a 200 serving
+  the wrong thing) but is **not** an application fault. **Only the production domain is
+  publicly readable**, so a content check must run against `mira-student-support.vercel.app`,
+  never a `*-<hash>-*.vercel.app` preview URL.
+- **`vercel deploy --prod` returned `{"reason": "deploy_failed", "message": "Not authorized"}`
+  on its first attempt, and succeeded on retry with no change to the command or the login.**
+  Treat it as transient once; do not start re-authenticating on the first refusal.
+
+**Still open, and deliberately not fixed by guesswork:** `git push` does **not** trigger a
+deploy — the project is not git-connected, so a push that looks successful leaves production
+on the previous build. Vercel suggests `vercel git connect` to close this. Until that is run,
+**deploying is a separate manual step after every push**, and the two can silently diverge.
 
 ---
 
