@@ -28,24 +28,32 @@ REDESIGN STATUS: LIVE IN PRODUCTION
 Tokens        : new palette + self-hosted type system (D31)
 Navigation    : header nav + mobile tab bar + persistent Flow C action
 Mobile 375px  : PASSES on production -- no horizontal overflow, all targets >= 44px
-                (measured on 0e09db9; see the amendment below)
+                (re-measured on evveu9qfd / 2324c23, 2026-09-25)
 Fonts         : Inter + DM Serif Display load and apply on the public URL
 Committed     : 2324c23 (FAB fix), pushed to origin/main, deployed and Ready
 Screenshots   : captured from the deployed domain (submission-assets/screens/)
 ```
 
-**Amendment 2026-09-25 — one claim here was one deploy out of date.** The 375px production
-line above was measured on `0e09db9`. The FAB fix (`2324c23`) landed *after* that measurement
-and was deployed separately, so for a period this block named a commit that was no longer
-production. Two things separate cleanly and are recorded separately:
+**Amendment 2026-09-25 — the 375px check is closed on the final deployment.** This block
+previously reported the 375px production pass without naming the deployment it was measured
+on. It had been measured on `0e09db9`, and the FAB fix (`2324c23` / `evveu9qfd`) landed
+*afterwards*, so for a period the block named a commit that was no longer production. The
+re-run has now been done against the live alias, and carries the stronger evidence of the
+two — see §14h for the full table:
 
-- **The FAB behaviour itself is verified on the final deployment** (`evveu9qfd`): a fresh visit
-  renders `fab=false` with the tab bar still present, and `/help` renders `fab=false`.
-- **The overflow and touch-target measurement has not been re-run on `evveu9qfd`.** The FAB fix
-  only *removes* an element from the first-visit screen, so it cannot introduce horizontal
-  overflow or shrink a touch target — but that is a sound argument, not a measurement, and this
-  section exists precisely because arguments of that shape have been wrong twice already (D27,
-  §8 item 20). It is recorded as pending rather than inferred.
+```
+all 7 pages @ 375x812 : scrollWidth == clientWidth == 375   -- no horizontal overflow
+touch targets         : every one >= 44px
+tab bar / FAB         : flex everywhere; FAB absent on / and /help, present elsewhere
+fonts                 : h1 -> DM Serif Display, body -> Inter, both loaded
+```
+
+**The run also proves production is the post-fix build, and that is the point of re-running
+it.** A version string would have to be trusted; the behaviour cannot be. `fab: absent` on
+the first-visit screen exists in no build before `2324c23` — that suppression *is* the FAB
+fix — so a passing run that shows the FAB absent on `/` is evidence about which code is
+serving, not merely about layout. The same reasoning is why the deployment is identified by
+behaviour here and by URL elsewhere.
 
 The lesson is the one from `git push` vs `vercel deploy`: **a validation record has a commit
 too.** "Passes on production" is not a property of the project, it is a property of a
@@ -145,9 +153,11 @@ amount of local testing could have revealed (D27).
 | After the D10 fix: `GET /help?problem=<canary>` does not echo | ✓ |
 
 **Currently working on:**
-- **Submission copy, not code.** Every engineering item is closed. What remains is the Devpost
-  description, the technology list, and the demo video. The one open *verification* item is the
-  375px re-run against the final deployment (`evveu9qfd`) — see the §0 amendment.
+- **Submission copy, not code.** Every engineering item and every verification item is closed.
+  What remains is the Devpost description, the technology list, and the demo video.
+- **One gap found by the 2026-09-25 final content audit and not yet closed:** the router was
+  validated by running 22 queries, but **no regression test is committed**. See the note under
+  §14b check 2 — the evidence exists, the guard does not.
 
 **Next exact action — this order is deliberate, do not reorder:**
 1. ~~`git init` + push to GitHub~~ — **DONE 2026-09-21.** `origin/main` = `8943908`, 30 files
@@ -160,8 +170,10 @@ amount of local testing could have revealed (D27).
 7. ~~Commit, push and redeploy the redesign~~ — **DONE 2026-09-24.** `0e09db9` is Live
 8. ~~Commit and redeploy the FAB fix (base.html)~~ — **DONE 2026-09-24.** `2324c23` pushed and
    deployed as `evveu9qfd`, Ready and aliased. FAB absence re-verified on that deployment.
-9. Re-run the 375px pass against `evveu9qfd` ← *next action* — closes the last verification gap
-10. Devpost description · technology list · demo video
+9. ~~Re-run the 375px pass against `evveu9qfd`~~ — **DONE 2026-09-25.** **PASS** on the live
+   alias: 7/7 pages at `scrollWidth == clientWidth == 375`, all targets ≥ 44px (§14h).
+   This closed the last open verification item.
+10. Devpost description · technology list · demo video ← *next action*
 
 **Deployment chain — live state:**
 
@@ -171,7 +183,7 @@ amount of local testing could have revealed (D27).
 | GitHub push | **VERIFIED** — `2324c23` on `main`, sole author, no attribution trailer (D26) |
 | Vercel deploy | **LIVE** — one function, region iad1 |
 | **Public URL** | **https://mira-student-support.vercel.app** |
-| Production acceptance test (§14b) | **9 / 10 PASS** — check 9 (mobile viewport) passes on the redesign; the production measurement names `0e09db9`, and the re-run against `2324c23` / `evveu9qfd` is the one open item (§0 amendment) |
+| Production acceptance test (§14b) | **9 / 10 PASS** — check 9 (mobile viewport) **PASSES on production**, re-measured 2026-09-25 against `evveu9qfd` / `2324c23` (§14h). No verification item is open. |
 
 **What deployment actually caught — and why the order was right.** Vercel reported a successful
 deploy while serving a **static copy of the repository with no function at all**. The project
@@ -1347,12 +1359,14 @@ FAB absent, both campus names `covered=false`.
 **Production validation — 2026-09-24, after redeploy.** Deployed `0e09db9`; project framework
 preset confirmed `FastAPI` **before** deploying, so the D27 failure mode was not re-entered.
 
-> **Scope note, added 2026-09-25.** Every row below was measured on **`0e09db9` /
-> `80xubm6x2`**. The FAB fix was committed afterwards as `2324c23` and deployed as
-> `evveu9qfd`, so this table describes the deployment *before* the current one. The rows
-> that the FAB fix could affect are the two that name the FAB; the rest (routes, CSS,
-> fonts, greeting, hours) are unaffected by removing an element from one screen. The
-> re-run against `evveu9qfd` is **§0 next action 9** and has not been done.
+> **Scope note, added 2026-09-25.** Every row below except the acceptance-check row was
+> measured on **`0e09db9` / `80xubm6x2`**. The FAB fix was committed afterwards as
+> `2324c23` and deployed as `evveu9qfd`, so those rows describe the deployment *before* the
+> current one. The FAB fix only removes an element from the first-visit screen, so the rows
+> it could plausibly affect are the two that name the FAB; the rest (routes, CSS, fonts,
+> greeting, hours) are unaffected by it. **The acceptance check 9 row has since been
+> re-run against `evveu9qfd` and is marked accordingly below** — a full re-measurement of
+> every row against the current deployment has not been done and is not claimed.
 
 | Check | Result |
 |---|---|
@@ -1361,7 +1375,7 @@ preset confirmed `FastAPI` **before** deploying, so the D27 failure mode was not
 | Deployed `styles.css` | 200, `text/css`, **37,362 bytes** (local 37,303 + 59 CRLF bytes) |
 | New classes present in the deployed CSS | ✓ `.tabbar` `.fab` `.header-nav` `.welcome` `.welcome-choice` `.hero-greeting` `.site-footer` |
 | All three fonts on the public URL | 200, `font/woff2` |
-| **Acceptance check 9 on production**, 7 pages @ 375×812 | **PASSES** on `0e09db9` — no horizontal overflow, every touch target ≥ 44px. **Not yet re-run on `evveu9qfd`** |
+| **Acceptance check 9 on production**, 7 pages @ 375×812 | **PASSES** — re-run 2026-09-25 against the live alias (`evveu9qfd` / `2324c23`): `scrollWidth == clientWidth == 375` on all 7 pages, every touch target ≥ 44px, FAB absent on `/` and `/help` |
 | Serif/sans actually applied on production | `h1` → DM Serif Display, body → Inter, both loaded |
 | Greeting on production | "Good evening." from the reader's own clock |
 | FAB on production | present on home/needs/journey/about; **absent** on `/help` and on the first-visit screen — *this row re-verified separately on `evveu9qfd`* |
