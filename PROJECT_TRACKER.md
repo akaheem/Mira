@@ -14,11 +14,13 @@ Last updated: **2026-09-24**
 
 ## 0. CURRENT DEVELOPMENT STATE
 
-**Phase:** Day 4 — **visual redesign complete and validated. Redeploy + submission assets.**
+**Phase:** Day 4 — **visual redesign complete and validated. Submission copy remains.**
 **Current milestone:** **Visual redesign built against the owner's design references (§14h).**
 Verified records are sourced (§14e, §14f) — 11 verified, target met. Deployment is complete.
+Remaining work is **non-engineering**: the Devpost description, the technology list, and the
+demo video. Nothing in the application is outstanding.
 
-**Redesign milestone — recorded 2026-09-24:**
+**Redesign milestone — recorded 2026-09-24, amended 2026-09-25:**
 
 ```
 REDESIGN STATUS: LIVE IN PRODUCTION
@@ -26,10 +28,28 @@ REDESIGN STATUS: LIVE IN PRODUCTION
 Tokens        : new palette + self-hosted type system (D31)
 Navigation    : header nav + mobile tab bar + persistent Flow C action
 Mobile 375px  : PASSES on production -- no horizontal overflow, all targets >= 44px
+                (measured on 0e09db9; see the amendment below)
 Fonts         : Inter + DM Serif Display load and apply on the public URL
-Committed     : 0e09db9, pushed to origin/main, deployed and Ready
+Committed     : 2324c23 (FAB fix), pushed to origin/main, deployed and Ready
 Screenshots   : captured from the deployed domain (submission-assets/screens/)
 ```
+
+**Amendment 2026-09-25 — one claim here was one deploy out of date.** The 375px production
+line above was measured on `0e09db9`. The FAB fix (`2324c23`) landed *after* that measurement
+and was deployed separately, so for a period this block named a commit that was no longer
+production. Two things separate cleanly and are recorded separately:
+
+- **The FAB behaviour itself is verified on the final deployment** (`evveu9qfd`): a fresh visit
+  renders `fab=false` with the tab bar still present, and `/help` renders `fab=false`.
+- **The overflow and touch-target measurement has not been re-run on `evveu9qfd`.** The FAB fix
+  only *removes* an element from the first-visit screen, so it cannot introduce horizontal
+  overflow or shrink a touch target — but that is a sound argument, not a measurement, and this
+  section exists precisely because arguments of that shape have been wrong twice already (D27,
+  §8 item 20). It is recorded as pending rather than inferred.
+
+The lesson is the one from `git push` vs `vercel deploy`: **a validation record has a commit
+too.** "Passes on production" is not a property of the project, it is a property of a
+`(commit, deployment)` pair, and a table that names neither can silently outlive its subject.
 
 **The three defects this pass found, all invisible until the page was rendered at 375px:**
 
@@ -125,8 +145,9 @@ amount of local testing could have revealed (D27).
 | After the D10 fix: `GET /help?problem=<canary>` does not echo | ✓ |
 
 **Currently working on:**
-- **Submission assets.** The redesign is live and production-validated (§14h). Committing the
-  FAB fix from §14h is the last engineering step before Devpost.
+- **Submission copy, not code.** Every engineering item is closed. What remains is the Devpost
+  description, the technology list, and the demo video. The one open *verification* item is the
+  375px re-run against the final deployment (`evveu9qfd`) — see the §0 amendment.
 
 **Next exact action — this order is deliberate, do not reorder:**
 1. ~~`git init` + push to GitHub~~ — **DONE 2026-09-21.** `origin/main` = `8943908`, 30 files
@@ -137,18 +158,20 @@ amount of local testing could have revealed (D27).
 6. ~~Phone-width pass at 375px~~ — **DONE 2026-09-24.** Check 9 **passes on production**;
    found and fixed three defects (§0, §14h). 375px now passes; acceptance check 9 is closed
 7. ~~Commit, push and redeploy the redesign~~ — **DONE 2026-09-24.** `0e09db9` is Live
-8. **Commit and redeploy the FAB fix (base.html)** ← *next action*
-9. Devpost description · technology list · demo video
+8. ~~Commit and redeploy the FAB fix (base.html)~~ — **DONE 2026-09-24.** `2324c23` pushed and
+   deployed as `evveu9qfd`, Ready and aliased. FAB absence re-verified on that deployment.
+9. Re-run the 375px pass against `evveu9qfd` ← *next action* — closes the last verification gap
+10. Devpost description · technology list · demo video
 
 **Deployment chain — live state:**
 
 | Step | State |
 |---|---|
 | Git identity · `gh` · Vercel auth | **VERIFIED** — all three, see §14a |
-| GitHub push | **VERIFIED** — `8943908` on `main`, sole author, no attribution trailer (D26) |
+| GitHub push | **VERIFIED** — `2324c23` on `main`, sole author, no attribution trailer (D26) |
 | Vercel deploy | **LIVE** — one function, region iad1 |
 | **Public URL** | **https://mira-student-support.vercel.app** |
-| Production acceptance test (§14b) | **9 / 10 PASS** — check 9 (mobile viewport) now passes locally against the redesign (§14h); **production re-run pending redeploy** |
+| Production acceptance test (§14b) | **9 / 10 PASS** — check 9 (mobile viewport) passes on the redesign; the production measurement names `0e09db9`, and the re-run against `2324c23` / `evveu9qfd` is the one open item (§0 amendment) |
 
 **What deployment actually caught — and why the order was right.** Vercel reported a successful
 deploy while serving a **static copy of the repository with no function at all**. The project
@@ -1324,6 +1347,13 @@ FAB absent, both campus names `covered=false`.
 **Production validation — 2026-09-24, after redeploy.** Deployed `0e09db9`; project framework
 preset confirmed `FastAPI` **before** deploying, so the D27 failure mode was not re-entered.
 
+> **Scope note, added 2026-09-25.** Every row below was measured on **`0e09db9` /
+> `80xubm6x2`**. The FAB fix was committed afterwards as `2324c23` and deployed as
+> `evveu9qfd`, so this table describes the deployment *before* the current one. The rows
+> that the FAB fix could affect are the two that name the FAB; the rest (routes, CSS,
+> fonts, greeting, hours) are unaffected by removing an element from one screen. The
+> re-run against `evveu9qfd` is **§0 next action 9** and has not been done.
+
 | Check | Result |
 |---|---|
 | Deployment | ● Ready, Production, 13s |
@@ -1331,10 +1361,10 @@ preset confirmed `FastAPI` **before** deploying, so the D27 failure mode was not
 | Deployed `styles.css` | 200, `text/css`, **37,362 bytes** (local 37,303 + 59 CRLF bytes) |
 | New classes present in the deployed CSS | ✓ `.tabbar` `.fab` `.header-nav` `.welcome` `.welcome-choice` `.hero-greeting` `.site-footer` |
 | All three fonts on the public URL | 200, `font/woff2` |
-| **Acceptance check 9 on production**, 7 pages @ 375×812 | **PASSES** — no horizontal overflow, every touch target ≥ 44px |
+| **Acceptance check 9 on production**, 7 pages @ 375×812 | **PASSES** on `0e09db9` — no horizontal overflow, every touch target ≥ 44px. **Not yet re-run on `evveu9qfd`** |
 | Serif/sans actually applied on production | `h1` → DM Serif Display, body → Inter, both loaded |
 | Greeting on production | "Good evening." from the reader's own clock |
-| FAB on production | present on home/needs/journey/about; **absent** on `/help` and on the first-visit screen |
+| FAB on production | present on home/needs/journey/about; **absent** on `/help` and on the first-visit screen — *this row re-verified separately on `evveu9qfd`* |
 
 **The hours fix demonstrated itself on live data.** At the moment of verification it was
 **23:08 in Lahore and 18:08 UTC**. `pk-lhr-003` (08:00–20:00) rendered **"Closed now"** — and
