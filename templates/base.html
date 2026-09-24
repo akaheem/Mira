@@ -115,8 +115,16 @@
     when something is wrong, so on a phone it stays one tap away wherever she is. It links
     to /help, so it is suppressed on /help itself -- a button that reloads the page you are
     already on is worse than no button.
+
+    It is also suppressed while no location has been chosen. The reason is layout, and it is
+    measured rather than felt: this is a FLOATING button, so it sits ON TOP of the content,
+    and at 375px it landed across the campus name on the first-visit screen. That name is
+    the one thing that screen exists to convey -- the whole point of asking is that she reads
+    the two options. The tab bar stays, because it is a bar the layout reserves room for
+    rather than an overlay, and because D29 explicitly permits a deep link to fall back to a
+    default. This is not D29 forbidding the button; it is the button covering the answer.
   #}
-  {% if nav_section != 'help' %}
+  {% if nav_section != 'help' and location %}
     <a class="fab" href="/help">
       <span aria-hidden="true">&#9671;</span> I need help
     </a>

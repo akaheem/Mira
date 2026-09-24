@@ -21,16 +21,17 @@ Verified records are sourced (§14e, §14f) — 11 verified, target met. Deploym
 **Redesign milestone — recorded 2026-09-24:**
 
 ```
-REDESIGN STATUS: BUILT AND VALIDATED LOCALLY
+REDESIGN STATUS: LIVE IN PRODUCTION
 
 Tokens        : new palette + self-hosted type system (D31)
 Navigation    : header nav + mobile tab bar + persistent Flow C action
-Mobile 375px  : PASSES -- no horizontal overflow, all targets >= 44px
-Fonts         : Inter + DM Serif Display load and apply
-NOT YET DONE  : committed, redeployed, or screenshotted from production
+Mobile 375px  : PASSES on production -- no horizontal overflow, all targets >= 44px
+Fonts         : Inter + DM Serif Display load and apply on the public URL
+Committed     : 0e09db9, pushed to origin/main, deployed and Ready
+Screenshots   : captured from the deployed domain (submission-assets/screens/)
 ```
 
-**The two defects this pass found, both invisible until the page was rendered at 375px:**
+**The three defects this pass found, all invisible until the page was rendered at 375px:**
 
 1. **The compiled stylesheet was stale.** `input.css` and the templates had been edited after
    the last `npm run build:css`, so `styles.css` was missing whole component families the
@@ -45,10 +46,16 @@ NOT YET DONE  : committed, redeployed, or screenshotted from production
    link — and because it is the end of the document, **no amount of scrolling revealed it.**
    Fixed in `.site-footer`; re-measured, and the text now clears the tab bar by 71px and the
    link clears the FAB by 88px.
+3. **The FAB covered the campus name on the first-visit screen.** The persistent Flow C action
+   is a *floating* button, so it sits on top of content; at 375px it landed across
+   "Mira Demo Campus" — the one piece of information that screen exists to convey. Now
+   suppressed while no location is chosen (`base.html`). **Not on D29 grounds:** D29
+   explicitly permits a deep link to fall back to a default, and the tab bar still does. The
+   reason is layout, and it was measured, not felt.
 
-Both are the same lesson as **D27** and **§8 item 20**: the defect was reachable only by
-running the thing — one by building the stylesheet, one by rendering at a real phone width.
-Reading the source showed nothing wrong in either case.
+All three are the same lesson as **D27** and **§8 item 20**: the defect was reachable only by
+running the thing — one by building the stylesheet, two by rendering at a real phone width.
+Reading the source showed nothing wrong in any of them.
 
 **Deployment milestone — recorded 2026-09-22:**
 
@@ -118,24 +125,19 @@ amount of local testing could have revealed (D27).
 | After the D10 fix: `GET /help?problem=<canary>` does not echo | ✓ |
 
 **Currently working on:**
-- **The visual redesign (§14h).** Built and validated locally; **not yet committed or
-  redeployed.** Production still serves the pre-redesign build (`9349a35`).
+- **Submission assets.** The redesign is live and production-validated (§14h). Committing the
+  FAB fix from §14h is the last engineering step before Devpost.
 
 **Next exact action — this order is deliberate, do not reorder:**
 1. ~~`git init` + push to GitHub~~ — **DONE 2026-09-21.** `origin/main` = `8943908`, 30 files
 2. ~~Deploy to Vercel~~ — **DONE 2026-09-21.** Two production-only failures found and fixed (D27)
 3. ~~Full production regression test (§14b)~~ — **DONE 2026-09-22.** 9 of 10 pass, one not run
 4. ~~Source the prioritised verified records (§14c)~~ — **DONE 2026-09-22.** 11 verified (§14e, §14f)
-5. ~~Phone-width pass at 375px~~ — **DONE 2026-09-24, and it found two defects.** Note that
-   check 9 had **already passed on 2026-09-22** against the pre-redesign build (`9349a35`);
-   the redesign replaces the stylesheet wholesale, so that result does not carry over and the
-   check was re-run against the redesign. It passes, after fixing the stale stylesheet and the
-   footer clearance (§0, §14h). **Check 9 must be re-run on production once step 7 lands**
-6. ~~Visual redesign against the owner's design references~~ — **DONE 2026-09-24.** See §14h
-7. **Commit the redesign, then redeploy** ← *next action*. `static/fonts/` must be committed
-   with it — the stylesheet declares the faces at `/static/fonts/…`, so a repo without them
-   deploys a page whose every heading falls back to Georgia
-8. Screenshots (3+) — **from the deployed domain**, after step 7, not from localhost
+5. ~~Visual redesign against the owner's design references~~ — **DONE 2026-09-24.** See §14h
+6. ~~Phone-width pass at 375px~~ — **DONE 2026-09-24.** Check 9 **passes on production**;
+   found and fixed three defects (§0, §14h). 375px now passes; acceptance check 9 is closed
+7. ~~Commit, push and redeploy the redesign~~ — **DONE 2026-09-24.** `0e09db9` is Live
+8. **Commit and redeploy the FAB fix (base.html)** ← *next action*
 9. Devpost description · technology list · demo video
 
 **Deployment chain — live state:**
@@ -1305,6 +1307,46 @@ offset and so showed the bars floating mid-page as a **capture artifact**. It wa
 measuring element bounding boxes against the bars **at the true viewport**, at the bottom of
 the document. The artifact and the defect look similar in a screenshot and are not the same
 thing.
+
+**And the FAB covered the campus name on the first-visit screen.** The redirect above fixed
+the *footer*, but the FAB is `position: fixed` too and floats over content everywhere — at
+375px it came to rest across "Mira Demo Campus" on the welcome screen. That screen exists to
+get her to read one of two campus names, and the button was sitting on one of them. Fixed by
+suppressing the FAB while no location is chosen (`base.html`).
+
+This one is worth being precise about, because the easy justification is the wrong one.
+It is **not** D29 forbidding a Flow C link before a location is known — D29 explicitly permits
+a deep link to fall back to a default, and the tab bar still does exactly that. The reason is
+layout: the FAB is an **overlay** and the tab bar is a **bar the layout reserves room for**,
+and only one of those can cover the answer it is sitting next to. Re-measured after the fix:
+FAB absent, both campus names `covered=false`.
+
+**Production validation — 2026-09-24, after redeploy.** Deployed `0e09db9`; project framework
+preset confirmed `FastAPI` **before** deploying, so the D27 failure mode was not re-entered.
+
+| Check | Result |
+|---|---|
+| Deployment | ● Ready, Production, 13s |
+| All routes on the public URL | **200** |
+| Deployed `styles.css` | 200, `text/css`, **37,362 bytes** (local 37,303 + 59 CRLF bytes) |
+| New classes present in the deployed CSS | ✓ `.tabbar` `.fab` `.header-nav` `.welcome` `.welcome-choice` `.hero-greeting` `.site-footer` |
+| All three fonts on the public URL | 200, `font/woff2` |
+| **Acceptance check 9 on production**, 7 pages @ 375×812 | **PASSES** — no horizontal overflow, every touch target ≥ 44px |
+| Serif/sans actually applied on production | `h1` → DM Serif Display, body → Inter, both loaded |
+| Greeting on production | "Good evening." from the reader's own clock |
+| FAB on production | present on home/needs/journey/about; **absent** on `/help` and on the first-visit screen |
+
+**The hours fix demonstrated itself on live data.** At the moment of verification it was
+**23:08 in Lahore and 18:08 UTC**. `pk-lhr-003` (08:00–20:00) rendered **"Closed now"** — and
+by hand, 23:08 is minute 1388 against a window ending at 1200, so closed is right. The old code
+compared against the server's clock, so at 18:08 UTC it would have reported **"Open until
+20:00"** for a campus that had closed three hours earlier. That is the defect, reproduced on
+production data rather than argued from the source.
+
+**Submission screenshots were then regenerated from the deployed domain** (`§9`,
+`submission-assets/screens/`), as viewport captures rather than `fullPage` — the artifact
+described above makes a `fullPage` capture of this app look broken to anyone who does not know
+it is fixed-position behaviour.
 
 **Verification record — what running actually proved:**
 
