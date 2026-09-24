@@ -83,6 +83,25 @@ def _has_illustrative(slug: Optional[str]) -> bool:
     return bool(repo.provenance_counts(slug).get(repo.ILLUSTRATIVE, 0))
 
 
+# Which primary destination a page belongs to. The desktop header nav and the mobile tab
+# bar are two renderings of one list, so the "where am I" answer is computed once here --
+# two navigations deciding independently is how they end up highlighting different things
+# on the same page.
+NAV_SECTIONS: tuple[tuple[str, str], ...] = (
+    ("/needs", "explore"),
+    ("/help", "help"),
+    ("/journey", "journey"),
+    ("/about", "about"),
+)
+
+
+def nav_section(path: str) -> str:
+    for prefix, name in NAV_SECTIONS:
+        if path == prefix or path.startswith(prefix + "/"):
+            return name
+    return "home" if path == "/" else ""
+
+
 def base_context(request: Request, no_location: bool = False, **extra) -> dict:
     # no_location is for the home page before a location has been chosen. It is not the
     # same as "no location resolved": current_location() would fall back to a default, and
@@ -95,6 +114,7 @@ def base_context(request: Request, no_location: bool = False, **extra) -> dict:
         "location_slug": slug,
         "locations": repo.get_locations(),
         "is_demo": _has_illustrative(slug),
+        "nav_section": nav_section(request.url.path),
         **extra,
     }
 

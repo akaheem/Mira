@@ -101,6 +101,18 @@ def data_warnings() -> list[str]:
             warnings.append(f"{record.id}: unknown provenance {record.provenance!r}")
         elif record.provenance == VERIFIED and not record.source_url:
             warnings.append(f"{record.id}: provenance=verified but no source_url")
+
+    # A location with no entry in CITY_TIMEZONES cannot answer "is it open right now" --
+    # every one of its records renders "Hours unknown". That is the correct thing to show
+    # and the wrong thing to leave unnoticed, so it is named here rather than discovered
+    # when a whole campus' hours silently go blank.
+    for location in get_locations():
+        if location.timezone is None:
+            warnings.append(
+                f"{location.city}, {location.country}: no timezone in CITY_TIMEZONES, "
+                f"so every opening-hours claim here will render as unknown"
+            )
+
     return warnings
 
 

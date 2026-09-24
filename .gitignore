@@ -27,6 +27,13 @@ notes/
 # with binaries that go stale the moment the UI changes. Kept on disk for easy reference.
 submission-assets/
 
+# Source design references — the two PDFs the 2026-09-23 visual redesign was built from.
+# Reference material, not project source: ~3.5MB of binaries that no build step reads and
+# that would go stale the moment the interface moves on. Kept on disk, like `notes/`.
+# The decisions taken FROM them are recorded in PROJECT_TRACKER.md, which is what the
+# next session actually needs.
+designs/
+
 # Local secrets
 .env
 .env.*

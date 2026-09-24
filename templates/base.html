@@ -5,16 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Mira{% endblock %}</title>
   <meta name="description" content="Mira — a support companion for students. Find what you need, know what to do, get where you need to go.">
-  <meta name="theme-color" content="#6D2B4C">
+  <meta name="theme-color" content="#124E5A">
   {#
-    Absolute paths, not request.url_for('static', ...). These two URLs are a deployment
-    contract: vercel.json routes /static/(.*) to @vercel/static so the stylesheet is served
-    from the CDN and never invokes the Python function. url_for on a *named mount* has
-    changed behaviour across Starlette versions -- some produce /static//css/styles.css for a
-    leading-slash `path` -- and a wrong URL here fails as an unstyled page, which is a silent
-    failure in exactly the component this product is built around. The path is fixed, so it
-    is written as a fixed path.
+    Absolute paths, not request.url_for('static', ...). These URLs are a deployment
+    contract: Vercel promotes the StaticFiles mount to the CDN, so the stylesheet and the
+    fonts are served from there and never invoke the Python function. url_for on a *named
+    mount* has changed behaviour across Starlette versions -- some produce
+    /static//css/styles.css for a leading-slash `path` -- and a wrong URL here fails as an
+    unstyled page, which is a silent failure in exactly the component this product is
+    built around. The paths are fixed, so they are written as fixed paths.
+
+    The font files are declared inside styles.css and are referenced from there, so only
+    the serif needs a preload here: it sets the first heading on every page, and it is
+    25KB rather than 48KB. Inter falls back to the system sans for the instant before it
+    swaps in, which is close enough that the swap is not visible.
   #}
+  <link rel="preload" href="/static/fonts/dm-serif-display-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
@@ -26,6 +32,15 @@
         <span class="wordmark-mark" aria-hidden="true">&#10022;</span>
         <span>Mira</span>
       </a>
+
+      {# Desktop navigation. On a phone the tab bar below does this job, and duplicating it
+         here would cost a row of the screen for a control that is already in thumb reach. #}
+      <nav class="header-nav" aria-label="Main">
+        <a href="/needs" {% if nav_section == 'explore' %}aria-current="page"{% endif %}>Explore</a>
+        <a href="/help" {% if nav_section == 'help' %}aria-current="page"{% endif %}>Help</a>
+        <a href="/journey" {% if nav_section == 'journey' %}aria-current="page"{% endif %}>Journey</a>
+        <a href="/about" {% if nav_section == 'about' %}aria-current="page"{% endif %}>About</a>
+      </nav>
 
       {% if locations and locations|length > 1 %}
         <details class="loc-switcher">
@@ -70,6 +85,42 @@
       </p>
     </div>
   </footer>
+
+  {#
+    The mobile tab bar. Four destinations, every one of them a page that exists -- a tab
+    bar is the most prominent navigation in the product and a placeholder in it is the
+    first thing anyone taps. "Saved" is deliberately absent: Mira has no saved-items
+    feature, so a Saved tab would be a dead link on every screen.
+
+    The labels are the short forms of the flow names, because a tab is 90px wide and
+    "I need something" wraps to three lines in it. The full names are on the home cards.
+  #}
+  <nav class="tabbar" aria-label="Main">
+    <a class="tab" href="/" {% if nav_section == 'home' %}aria-current="page"{% endif %}>
+      <span class="tab-mark" aria-hidden="true">&#8962;</span>Home
+    </a>
+    <a class="tab" href="/needs" {% if nav_section == 'explore' %}aria-current="page"{% endif %}>
+      <span class="tab-mark" aria-hidden="true">&#9906;</span>Explore
+    </a>
+    <a class="tab" href="/help" {% if nav_section == 'help' %}aria-current="page"{% endif %}>
+      <span class="tab-mark" aria-hidden="true">&#9671;</span>Help
+    </a>
+    <a class="tab" href="/journey" {% if nav_section == 'journey' %}aria-current="page"{% endif %}>
+      <span class="tab-mark" aria-hidden="true">&#10142;</span>Journey
+    </a>
+  </nav>
+
+  {#
+    The persistent primary action. Flow C is the P0 flow and the one a student reaches for
+    when something is wrong, so on a phone it stays one tap away wherever she is. It links
+    to /help, so it is suppressed on /help itself -- a button that reloads the page you are
+    already on is worse than no button.
+  #}
+  {% if nav_section != 'help' %}
+    <a class="fab" href="/help">
+      <span aria-hidden="true">&#9671;</span> I need help
+    </a>
+  {% endif %}
 
   {# Enhancement only. Every flow works with this file absent. #}
   <script src="/static/js/app.js" defer></script>

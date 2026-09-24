@@ -191,7 +191,40 @@
     });
   }
 
+  /* -------------------------------------------------------------------------
+   * Time-of-day greeting
+   *
+   * Computed in the browser, not on the server, and that is the whole point.
+   * The function runs in one region; the student may be eight timezones away.
+   * A server-rendered "Good evening" is correct for whoever the server is
+   * near and wrong for everyone else, which is a small untruth on the one
+   * screen whose job is to establish that Mira does not say things it cannot
+   * support.
+   *
+   * If this file does not load, the element stays empty and hidden, and the
+   * heading underneath reads correctly on its own. Nothing is lost.
+   * ---------------------------------------------------------------------- */
+
+  function setGreeting() {
+    var el = document.querySelector("[data-greeting]");
+    if (!el) return;
+
+    var hour = new Date().getHours();
+    var greeting;
+
+    if (hour >= 5 && hour < 12) {
+      greeting = "Good morning.";
+    } else if (hour >= 12 && hour < 18) {
+      greeting = "Good afternoon.";
+    } else {
+      greeting = "Good evening.";
+    }
+
+    el.textContent = greeting;
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
+    setGreeting();
     wireSharing();
 
     document.addEventListener("click", function (event) {

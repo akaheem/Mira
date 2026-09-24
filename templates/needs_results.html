@@ -22,39 +22,38 @@
             <h2 class="card-title">
               <span aria-hidden="true">{{ place.icon }}</span> {{ place.name }}
             </h2>
-            <div class="chips">
-              {{ m.provenance(place) }}
-              {{ m.jurisdiction_tag(place) }}
-              {{ m.stale_badge(place) }}
-              {{ m.open_state(place) }}
-            </div>
           </div>
 
-          <dl class="facts">
+          {#
+            The open/closed answer gets its own line rather than a chip among the others.
+            "Is it open right now" is the question she is actually asking when she scans
+            this card, and an answer buried in a row of six pills is not an answer. The
+            wording is the model's, and it is computed on the campus's clock.
+          #}
+          <p class="card-status">
+            {{ place.open_state_label }}
+            {%- if place.hours %} <span class="meta">({{ place.hours }})</span>{% endif %}
+          </p>
+
+          <div class="chips mt-2">
+            {{ m.provenance(place) }}
+            {{ m.jurisdiction_tag(place) }}
+            {{ m.stale_badge(place) }}
+            {% if place.women_only %}<span class="chip chip-quiet">Women only</span>{% endif %}
+            {% if place.wheelchair_accessible %}<span class="chip chip-quiet">Step-free access</span>{% endif %}
+          </div>
+
+          <dl class="facts mt-3">
             {% if place.building %}
               <div class="fact"><dt>Building</dt><dd>{{ place.building }}</dd></div>
             {% endif %}
             {% if place.landmark %}
               <div class="fact"><dt>Where exactly</dt><dd>{{ place.landmark }}</dd></div>
             {% endif %}
-            {% if place.hours %}
-              <div class="fact"><dt>Hours</dt><dd>{{ place.hours }}</dd></div>
-            {% endif %}
             {% if place.price %}
               <div class="fact"><dt>Cost</dt><dd>{{ place.price }}</dd></div>
             {% endif %}
           </dl>
-
-          {% if place.women_only or place.wheelchair_accessible %}
-            <div class="chips">
-              {% if place.women_only %}
-                <span class="chip chip-quiet">Women only</span>
-              {% endif %}
-              {% if place.wheelchair_accessible %}
-                <span class="chip chip-quiet">Step-free access</span>
-              {% endif %}
-            </div>
-          {% endif %}
 
           {% if place.notes %}
             <p class="card-note">{{ place.notes }}</p>

@@ -13,81 +13,71 @@
       and the point of the record model is that the answer depends on where you are. Each
       location states its country, so the fact that Mira covers more than one is legible on
       the first screen instead of hidden behind a dropdown.
+
+      The soft gradient behind this block is the only one in the product. It sits behind a
+      choice, not behind a claim -- there is nothing here you have to read carefully on top
+      of it.
     #}
-    <section class="hero">
-      <h1 class="hero-title">What do you need right now?</h1>
-      <p class="hero-sub">
-        Choose where you are studying. Mira documents processes that differ by country and
-        by campus, so the answer depends on where you are.
+    <section class="welcome">
+      <h1 class="welcome-title">You're not alone. Let's figure this out.</h1>
+      <p class="welcome-sub">
+        First, where are you studying? Mira documents processes that differ by country, so
+        the answer depends on where you are.
       </p>
     </section>
 
-    <nav class="choices" aria-label="Choose where you are studying">
+    <nav class="welcome-choices" aria-label="Choose where you are studying">
       {% for loc in locations %}
-        <a class="choice" href="/set-location/{{ loc.slug }}">
-          <span class="choice-icon" aria-hidden="true">&#9679;</span>
-          <span class="choice-body">
-            <span class="choice-title">{{ loc.campus }}</span>
-            <span class="choice-desc">{{ loc.city }}, {{ loc.country }}</span>
-          </span>
+        <a class="welcome-choice" href="/set-location/{{ loc.slug }}">
+          <span class="welcome-campus">{{ loc.campus }}</span>
+          <span class="welcome-place">{{ loc.city }}, {{ loc.country }}</span>
         </a>
       {% endfor %}
     </nav>
   {% else %}
     <section class="hero">
-      <h1 class="hero-title">What do you need right now?</h1>
+      {# Filled in by app.js from the reader's own clock. The server runs in one region and
+         cannot know what time it is where she is, so it does not guess -- an interface
+         that says "Good evening" at 9am is one small untruth on the screen whose whole job
+         is to establish that Mira does not say things it cannot support. #}
+      <p class="hero-greeting" data-greeting></p>
+      <h1 class="hero-title">What do you need today?</h1>
       <p class="hero-sub">
         {% if location %}
-          You are looking at <strong>{{ location.campus }}</strong>, {{ location.city }}.
+          You're looking at <strong>{{ location.campus }}</strong>, {{ location.city }}.
         {% endif %}
         No account needed.
       </p>
     </section>
 
-  <nav class="choices" aria-label="Choose what you need">
+    <nav class="choices" aria-label="Choose what you need">
 
-    <a class="choice" href="/needs">
-      <span class="choice-icon" aria-hidden="true">&#9679;</span>
-      <span class="choice-body">
+      <a class="choice" href="/needs">
         <span class="choice-title">I need something</span>
-        <span class="choice-desc">
+        <span class="choice-desc">Find a nearby resource</span>
+        <span class="choice-eg">
           A washroom, menstrual products, water, first aid, food, a quiet place to study.
         </span>
-        {% if resource_count %}
-          <span class="choice-count">{{ resource_count }} place{{ '' if resource_count == 1 else 's' }} listed here</span>
-        {% endif %}
-      </span>
-    </a>
+      </a>
 
-    <a class="choice" href="/help">
-      <span class="choice-icon" aria-hidden="true">&#9679;</span>
-      <span class="choice-body">
-        <span class="choice-title">I need help with a problem</span>
-        <span class="choice-desc">
+      <a class="choice" href="/help">
+        <span class="choice-title">I need help</span>
+        <span class="choice-desc">Tell me what's going on</span>
+        <span class="choice-eg">
           Fees, a scholarship, a harassment concern, a grade dispute, hostel, health.
-          Describe it in your own words and Mira finds the right process.
         </span>
-        {% if support_count %}
-          <span class="choice-count">{{ support_count }} process{{ '' if support_count == 1 else 'es' }} documented here</span>
-        {% endif %}
-      </span>
-    </a>
+      </a>
 
-    <a class="choice" href="/journey">
-      <span class="choice-icon" aria-hidden="true">&#9679;</span>
-      <span class="choice-body">
+      <a class="choice" href="/journey">
         <span class="choice-title">Get me there</span>
-        <span class="choice-desc">
-          How to reach campus, what it costs, how long it takes, and whether women's
-          transport is running when you travel.
+        <span class="choice-desc">Plan my journey</span>
+        <span class="choice-eg">
+          What the trip costs, how long it takes, and whether women's transport is running
+          when you travel.
         </span>
-        {% if area_count %}
-          <span class="choice-count">{{ area_count }} starting point{{ '' if area_count == 1 else 's' }}</span>
-        {% endif %}
-      </span>
-    </a>
+      </a>
 
-  </nav>
+    </nav>
   {% endif %}
 
   <section class="principle">

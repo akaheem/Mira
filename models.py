@@ -32,6 +32,31 @@ import re
 from dataclasses import dataclass, field
 from datetime import date, datetime
 from typing import Optional
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
+
+# Which clock a record's opening hours are written in.
+#
+# This is the difference between a fact and a guess. "Open until 17:00" is a claim about a
+# place, and the place keeps ITS OWN time; the server does not. Before this map existed,
+# `open_now` compared the hours against `datetime.now()` -- the server's clock, which is
+# UTC on Vercel and the developer's local time on a laptop. That is not a cosmetic bug: at
+# 02:00 UTC a Lahore campus open 07:00-22:00 reported "Closed now" when it was 07:00 and
+# open, and the same page viewed from a laptop in Pakistan reported it correctly. The
+# failure was invisible in local testing and wrong in production, which is the exact shape
+# of bug this project has already been bitten by once (D27).
+#
+# IANA names rather than fixed offsets, because Manchester is UTC+0 in winter and UTC+1 in
+# summer. A hardcoded "+1" would be correct for the demo in September and wrong from
+# November -- a plausible-looking field that quietly stops being true, which is the failure
+# mode the whole provenance model exists to prevent.
+#
+# A city that is not listed here gets NO answer rather than a wrong one: `open_now` returns
+# None, the card reads "Hours unknown", and `data_warnings()` names the city so it cannot
+# be added silently.
+CITY_TIMEZONES: dict[tuple[str, str], str] = {
+    ("Pakistan", "Lahore"): "Asia/Karachi",
+    ("United Kingdom", "Manchester"): "Europe/London",
+}
 
 # The fixed category vocabulary. Locations supply records; they never extend this list,
 # because a free-form vocabulary would not survive translation across countries.
@@ -227,6 +252,11 @@ class Location:
     def label(self) -> str:
         return f"{self.campus}, {self.city}"
 
+    @property
+    def timezone(self) -> Optional[str]:
+        """The zone this location keeps. None means every hours claim here is unknowable."""
+        return CITY_TIMEZONES.get((self.country, self.city))
+
 
 class _Provenanced:
     """Mixin for the three-state trust vocabulary.
@@ -336,9 +366,42 @@ class Resource(_Provenanced):
         return days is not None and days > STALE_AFTER_DAYS
 
     @property
+    def timezone(self) -> Optional[str]:
+        """The zone this record's opening hours are written in, if we know it."""
+        return CITY_TIMEZONES.get((self.country, self.city))
+
+    @property
     def open_now(self) -> Optional[bool]:
         """None means 'we do not know' -- which is different from 'closed'."""
-        return _hours_contain_now(self.hours)
+        return _hours_contain_now(self.hours, self.timezone)
+
+    @property
+    def close_time(self) -> str:
+        """Closing time as 'HH:MM', when `hours` is a plain daily window. Else ''.
+
+        24-hour, matching the format the data itself is written in. Rendering "5 PM" beside
+        an "08:00-17:00" line would put two conventions on one card.
+        """
+        window = _parse_window(self.hours)
+        if window is None:
+            return ""
+        return f"{window[1] // 60:02d}:{window[1] % 60:02d}"
+
+    @property
+    def open_state_label(self) -> str:
+        """The whole open/closed statement, worded once so no template has to decide it.
+
+        Same principle as `provenance_label`: the moment two templates phrase this
+        themselves, they can disagree -- and "Closed now" and "Hours unknown" are the two
+        that must never be confused.
+        """
+        state = self.open_now
+        if state is None:
+            return "Hours unknown"
+        if state:
+            close = self.close_time
+            return f"Open until {close}" if close else "Open now"
+        return "Closed now"
 
 
 @dataclass(frozen=True)
@@ -526,12 +589,32 @@ def _parse_hhmm(value: str) -> Optional[tuple[int, int]]:
         return None
 
 
-def _hours_contain_now(spec: str) -> Optional[bool]:
-    """Is `now` inside the 'HH:MM-HH:MM' window? None if the spec is unparseable.
+def _hours_contain_now(spec: str, timezone: Optional[str]) -> Optional[bool]:
+    """Is the local time at the record's own location inside the 'HH:MM-HH:MM' window?
 
-    Returns None rather than False when we cannot tell, because 'closed' and 'unknown'
-    are different claims and the UI must not conflate them.
+    None if the spec is unparseable OR the location's timezone is unknown. Returns None
+    rather than False when we cannot tell, because 'closed' and 'unknown' are different
+    claims and the UI must not conflate them -- and it returns None rather than a guess
+    when we do not know what time it is *there*, because a wrong answer here is a
+    statement about a real place that a student may act on.
     """
+    window = _parse_window(spec)
+    if window is None or timezone is None:
+        return None
+
+    now = _local_now(timezone)
+    if now is None:
+        return None
+
+    start, end = window
+    minutes_now = now.hour * 60 + now.minute
+    if end < start:  # window crosses midnight
+        return minutes_now >= start or minutes_now <= end
+    return start <= minutes_now <= end
+
+
+def _parse_window(spec: str) -> Optional[tuple[int, int]]:
+    """'08:00-17:00' -> (480, 1020). None when the spec is not a plain daily window."""
     if not spec or "-" not in spec:
         return None
     try:
@@ -540,14 +623,19 @@ def _hours_contain_now(spec: str) -> Optional[bool]:
         eh, em = (int(x) for x in end_s.strip().split(":"))
     except (ValueError, TypeError):
         return None
+    return sh * 60 + sm, eh * 60 + em
 
-    now = datetime.now()
-    minutes_now = now.hour * 60 + now.minute
-    start = sh * 60 + sm
-    end = eh * 60 + em
-    if end < start:  # window crosses midnight
-        return minutes_now >= start or minutes_now <= end
-    return start <= minutes_now <= end
+
+def _local_now(timezone: Optional[str]) -> Optional[datetime]:
+    """The current time where the record is, or None if we cannot establish it."""
+    if not timezone:
+        return None
+    try:
+        return datetime.now(ZoneInfo(timezone))
+    except (ZoneInfoNotFoundError, ValueError):
+        # A missing tz database (Windows without `tzdata`, a trimmed container image) must
+        # degrade to "we do not know", never to the server's clock.
+        return None
 
 
 def _last_departure_after_dark(spec: str) -> Optional[bool]:

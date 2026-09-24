@@ -8,15 +8,47 @@ It is three things at once: a **development tracker**, a **decision log**, and a
 **evidence ledger**. The evidence ledger matters as much as the task list — it records what
 we *disproved*, so a dead claim cannot quietly return.
 
-Last updated: **2026-09-21**
+Last updated: **2026-09-24**
 
 ---
 
 ## 0. CURRENT DEVELOPMENT STATE
 
-**Phase:** Day 2 — **deployed and production-validated. Source curation.**
-**Current milestone:** **Verified records sourced (§14e, §14f). Target met — 11 verified.**
-Deployment is complete.
+**Phase:** Day 4 — **visual redesign complete and validated. Redeploy + submission assets.**
+**Current milestone:** **Visual redesign built against the owner's design references (§14h).**
+Verified records are sourced (§14e, §14f) — 11 verified, target met. Deployment is complete.
+
+**Redesign milestone — recorded 2026-09-24:**
+
+```
+REDESIGN STATUS: BUILT AND VALIDATED LOCALLY
+
+Tokens        : new palette + self-hosted type system (D31)
+Navigation    : header nav + mobile tab bar + persistent Flow C action
+Mobile 375px  : PASSES -- no horizontal overflow, all targets >= 44px
+Fonts         : Inter + DM Serif Display load and apply
+NOT YET DONE  : committed, redeployed, or screenshotted from production
+```
+
+**The two defects this pass found, both invisible until the page was rendered at 375px:**
+
+1. **The compiled stylesheet was stale.** `input.css` and the templates had been edited after
+   the last `npm run build:css`, so `styles.css` was missing whole component families the
+   markup was already using — `.tabbar`, `.fab`, `.header-nav`, `.welcome`, `.welcome-choice`,
+   `.hero-greeting`. Tailwind tree-shakes the components layer, so a class it cannot find in
+   `content` compiles to **nothing**: correct markup, page renders, component silently
+   unstyled. The rebuild added **5,315 bytes** (31,972 → 37,287). This is the `safelist`
+   warning in `tailwind.config.js` happening for real, one level out — see §14h.
+2. **The footer never cleared the fixed bars.** `.main` carries `pb-32` for exactly that
+   purpose, but `.site-footer` is a **sibling** of `.main`, so it inherited nothing. At the
+   end of the document the footer note sat behind the tab bar and the FAB covered the footer
+   link — and because it is the end of the document, **no amount of scrolling revealed it.**
+   Fixed in `.site-footer`; re-measured, and the text now clears the tab bar by 71px and the
+   link clears the FAB by 88px.
+
+Both are the same lesson as **D27** and **§8 item 20**: the defect was reachable only by
+running the thing — one by building the stylesheet, one by rendering at a real phone width.
+Reading the source showed nothing wrong in either case.
 
 **Deployment milestone — recorded 2026-09-22:**
 
@@ -86,15 +118,25 @@ amount of local testing could have revealed (D27).
 | After the D10 fix: `GET /help?problem=<canary>` does not echo | ✓ |
 
 **Currently working on:**
-- **The sourcing batch (§14c).** Deployment is done and production is validated.
+- **The visual redesign (§14h).** Built and validated locally; **not yet committed or
+  redeployed.** Production still serves the pre-redesign build (`9349a35`).
 
 **Next exact action — this order is deliberate, do not reorder:**
 1. ~~`git init` + push to GitHub~~ — **DONE 2026-09-21.** `origin/main` = `8943908`, 30 files
 2. ~~Deploy to Vercel~~ — **DONE 2026-09-21.** Two production-only failures found and fixed (D27)
 3. ~~Full production regression test (§14b)~~ — **DONE 2026-09-22.** 9 of 10 pass, one not run
-4. **Source the prioritised verified records (§14c)** ← *next action*
-5. Phone-width polish at 375px — this also closes acceptance check 9 — then screenshots (3+)
-6. Devpost description · technology list · demo video
+4. ~~Source the prioritised verified records (§14c)~~ — **DONE 2026-09-22.** 11 verified (§14e, §14f)
+5. ~~Phone-width pass at 375px~~ — **DONE 2026-09-24, and it found two defects.** Note that
+   check 9 had **already passed on 2026-09-22** against the pre-redesign build (`9349a35`);
+   the redesign replaces the stylesheet wholesale, so that result does not carry over and the
+   check was re-run against the redesign. It passes, after fixing the stale stylesheet and the
+   footer clearance (§0, §14h). **Check 9 must be re-run on production once step 7 lands**
+6. ~~Visual redesign against the owner's design references~~ — **DONE 2026-09-24.** See §14h
+7. **Commit the redesign, then redeploy** ← *next action*. `static/fonts/` must be committed
+   with it — the stylesheet declares the faces at `/static/fonts/…`, so a repo without them
+   deploys a page whose every heading falls back to Georgia
+8. Screenshots (3+) — **from the deployed domain**, after step 7, not from localhost
+9. Devpost description · technology list · demo video
 
 **Deployment chain — live state:**
 
@@ -104,7 +146,7 @@ amount of local testing could have revealed (D27).
 | GitHub push | **VERIFIED** — `8943908` on `main`, sole author, no attribution trailer (D26) |
 | Vercel deploy | **LIVE** — one function, region iad1 |
 | **Public URL** | **https://mira-student-support.vercel.app** |
-| Production acceptance test (§14b) | **9 / 10 PASS** — check 9 (mobile viewport) needs a browser |
+| Production acceptance test (§14b) | **9 / 10 PASS** — check 9 (mobile viewport) now passes locally against the redesign (§14h); **production re-run pending redeploy** |
 
 **What deployment actually caught — and why the order was right.** Vercel reported a successful
 deploy while serving a **static copy of the repository with no function at all**. The project
@@ -209,6 +251,8 @@ implied certainty.
 | D28 | Flow C **echoes the student's own words back to her in the same response** (`You described: "…"`) | **LOCKED** | She has to see what she typed to judge whether the match is right; the no-match path repopulates the form for the same reason. This is text returned to *the same person, in the same response* — **not** a URL, not a query string, not a generated link, not a store. It looks like a privacy leak to a naive grep, which is exactly why it is pinned here: §14b check 7 tests it, and the echo is why a canary search returns a hit that must be **read** rather than counted | A redesign of the Flow C result page removes the echo — then §14b check 7's wording must change with it |
 | D29 | **The home page does not pre-select a location** — a first visit asks where you are studying | **LOCKED** | Owner's decision, 2026-09-22, taken against keeping the Lahore default. A default presents one country's records as though they were the whole product, and the point of the record model is that the answer depends on where you are. The switcher summary rendered only the *city*, so nothing on the first screen revealed that a second country existed — it was one dropdown deep. **Deep links still fall back to a default** (`current_location`); only the front door asks, so `/help` reached directly neither 500s nor loops | The data holds only one country — then a chooser is a step with nothing to choose. Reverting must **not** restore the city-only switcher summary; that was the actual defect |
 | D30 | **The three provenance states are shown on the home page, as live records rather than a legend** | **LOCKED** | Owner's instruction: *"the home page needs to show the three provenance states naturally. Not only on About. We don't want a judge to have to navigate to About just to discover the core trust mechanism."* Each row is a real record drawn from the dataset and linked to its own card, so the strip cannot drift from what the app shows — promoting a record to Verified changes it on the next request, with no second place to remember to update. A hand-written legend would be a claim *about* the app; this is the app. Where the current location has no example of a state, the strip falls back to the whole dataset: a trust explainer that silently shows two of its three states teaches the wrong lesson on the one screen that exists to teach it | A second place starts deciding how a state is *drawn* — `_macros.provenance` remains the only place that does. This decision is about where the vocabulary is *shown*, not how it renders |
+| D31 | **Interface rebuilt against the owner's design references** (`designs/design 1.pdf`, `design 2.pdf`): new token palette, self-hosted type system, header nav + mobile tab bar + persistent Flow C action | **LOCKED** | The owner supplied the two design PDFs on 2026-09-22 and directed the rebuild. Two things inside it are decisions rather than styling: **(1) It reverses the earlier "system stack on purpose" rule** recorded in the committed `tailwind.config.js` — a webfont *is* 30–100KB on a connection where the student is already waiting. That cost was real and is accepted deliberately, not argued away: the owner's direction needs an editorial serif for hierarchy and a screen-tuned sans for body copy, and no system stack provides both across Windows, macOS, Android and iOS. The bill is 95KB — Inter is one variable file covering 100–900, and the serif's italic is fetched only on the one page that uses it. **The rule that survives is the one that mattered: nothing is fetched from a third party.** A `fonts.googleapis.com` request would hand a third party the reader's IP and the fact that she is reading a page about, say, harassment. **(2) The old scale names `sand` and `plum` were renamed, not redefined.** Redefining those hexes under the old names would have left `plum-700` resolving to a teal — a name that lies to the next person to read it. Provenance still renders as glyph **+** label **+** class, never colour alone, and verified stays green rather than teal so the trust marker does not read as chrome | A measured load-cost failure appears on a slow connection — then **subset further**, do not move to a CDN. The serif ships a single 400 cut, so headings must not carry `font-semibold`: a synthetic bold on a high-contrast serif is the one thing it cannot survive, and hierarchy comes from size instead |
+| D32 | **Opening hours are answered on the campus's own clock; an unknown zone yields "Hours unknown", never a guess** | **LOCKED** | Follows from **§8 item 20**. Two things here are easy to undo by accident and must not be: **(1) `CITY_TIMEZONES` keys on IANA names, not numeric offsets**, because a fixed offset is a plausible-looking field that silently stops being true at the next DST boundary — Manchester is UTC+0 in winter and UTC+1 in summer. **(2) A location absent from the map gets `None`, not a default.** The tempting "fix" for blank hours is to fall back to UTC or to the server clock, and that fallback *is* the original defect — a wrong answer about a real place that a student may act on. The map is a maintenance obligation: adding a city means adding its zone, and `data_warnings()` names any location that has not been added | Every location carries a zone and the tz database is guaranteed present at runtime. Do **not** revisit to make blank cards go away — blank is the correct render when the zone is unknown |
 
 ---
 
@@ -638,6 +682,37 @@ context `app.py` actually passes, since nothing had ever been rendered):**
     Note also that the framework-preset failure that made the first deploy serve no application
     is recorded in **§14a + D27**, not here — it is a deployment configuration defect, not a
     code-correctness one.
+
+20. 🚨 **"Open now" was answered on the server's clock, not the campus's.** `_hours_contain_now`
+    compared a record's opening hours against `datetime.now()` — the clock of whatever machine
+    ran the code, which is UTC on Vercel and the developer's laptop locally. **"Open until
+    17:00" is a claim about a place, and the place keeps its own time.** At 02:00 UTC a Lahore
+    campus open 07:00–22:00 reported *"Closed now"* while it was 07:00 and open; the same page
+    opened from a laptop in Pakistan reported it correctly. Invisible in local testing, wrong
+    in production — the same shape as **D27**, and caught the same way: by asking what the
+    deployed environment does that the dev machine does not.
+
+    Fix: `CITY_TIMEZONES` maps `(country, city)` → IANA zone, and `open_now` answers on that
+    clock. **IANA names, not fixed offsets** — Manchester is UTC+0 in winter and UTC+1 in
+    summer, so a hardcoded `+1` would be correct in September and quietly wrong from November,
+    which is the "plausible field that stops being true" failure the whole provenance model
+    exists to prevent.
+
+    The honesty rule survives in the failure branch, and that is the part that matters: an
+    unlisted city, an unparseable window, or a **missing tz database** all return `None`, so the
+    card reads *"Hours unknown"* — never the server's clock. `_local_now` catches
+    `ZoneInfoNotFoundError` rather than falling back, because Windows and trimmed container
+    images ship no tz database; `tzdata==2025.2` is pinned for that reason. `data_warnings()`
+    now names any location absent from the map, so a whole campus cannot silently go blank.
+
+    `open_state_label` moved the wording into the model for the same reason `provenance_label`
+    exists: *"Closed now"* and *"Hours unknown"* are the two strings that must never be
+    confused, and two templates phrasing them independently is how that happens.
+
+    **Verified by running, not by reading:** both configured locations resolve; Lahore and
+    Manchester render from clocks 4 hours apart and each agrees with its own local time;
+    `_hours_contain_now` returns `None` (**not** `False`) for no-tz, bad-tz, empty and
+    unparseable specs; `_local_now(None)` → `None`; `data_warnings()` empty.
 
 ---
 
@@ -1178,6 +1253,108 @@ the neutral first screen existed only on disk until this deploy.
 deploy — the project is not git-connected, so a push that looks successful leaves production
 on the previous build. Vercel suggests `vercel git connect` to close this. Until that is run,
 **deploying is a separate manual step after every push**, and the two can silently diverge.
+
+---
+
+### 14h. Visual redesign + mobile pass — **VALIDATION RECORD 2026-09-24**
+
+**What was built.** The interface was rebuilt against the owner's design references
+(`designs/design 1.pdf`, `design 2.pdf`): a new token palette, a self-hosted type system, and
+header-nav / mobile-tab-bar / persistent-Flow-C-action navigation. Rationale and the two
+reversed sub-decisions are in **D31**; the opening-hours correctness fix that landed in the
+same working tree is **§8 item 20** and **D32**.
+
+**The stylesheet was stale, and that failure is silent.** `input.css` and the templates had
+been edited after the last `npm run build:css`, so `static/css/styles.css` was missing entire
+component families the markup was already using. Tailwind **tree-shakes the components
+layer**: a class it cannot find as a literal in `content` compiles to nothing, so the page
+renders with correct markup and an unstyled component. The rebuild added **5,315 bytes**
+(31,972 → 37,287).
+
+The classes that were absent — and each one is a visible part of the product, not a nicety:
+
+| Missing class | What it is | What its absence looked like |
+|---|---|---|
+| `.tabbar` | the mobile navigation | four unstacked text links at the page foot |
+| `.fab` | the persistent Flow C action | an unstyled link sitting on the content |
+| `.header-nav` | desktop navigation | four bare links in the header |
+| `.welcome` | the first-visit screen | no gradient, no card |
+| `.welcome-choice` | the two campus choices | two plain links, no tappable card |
+| `.hero-greeting` | the time-of-day greeting | a bare line of text above the heading |
+
+This is the same class of defect the `safelist` comment in `tailwind.config.js` was written
+to prevent — **one level out.** That comment anticipates interpolated class names being
+invisible to the scanner; this was simpler and worse: the whole file was out of date, so
+*every* newly-added class was invisible. **A compiled artifact in the repo makes staleness a
+state the repo can be in.** There is no build step at deploy time to catch it, because the
+compiled file *is* the deploy artifact. Rule: **after any edit to `input.css` or to a
+template's class attributes, rebuild before looking at a page — and rebuild before trusting a
+screenshot.**
+
+**The footer never cleared the fixed bars.** `.main` carries `pb-32` so body copy does not run
+under the tab bar. `.site-footer` is a **sibling** of `.main`, so it inherited nothing: at the
+end of the document the footer note sat behind the tab bar and the FAB covered the footer
+link. Because it is the end of the document, **scrolling could not reveal it** — the content
+was simply unreachable. Measured at 375px: footer bottom at the viewport bottom (812) while
+the tab bar began at 755. Fixed in `.site-footer` (`pt-6 pb-32 sm:pb-6`); re-measured, and the
+last line now clears the tab bar by **71px** and the link clears the FAB by **88px**.
+
+Note how this one was found: not by reading the CSS, which looks correct in isolation, and
+not by the `fullPage` screenshot, which renders `position: fixed` elements at their viewport
+offset and so showed the bars floating mid-page as a **capture artifact**. It was found by
+measuring element bounding boxes against the bars **at the true viewport**, at the bottom of
+the document. The artifact and the defect look similar in a screenshot and are not the same
+thing.
+
+**Verification record — what running actually proved:**
+
+| Check | Result |
+|---|---|
+| `npm run build:css` | ✓ 37,303 bytes after all fixes |
+| All six previously-missing classes now emit | ✓ `.tabbar` `.fab` `.header-nav` `.welcome` `.welcome-choice` `.hero-greeting` |
+| All 13 routes render (`/`, `/needs`, `/help`, `/journey`, `/about`, 6 categories, 2 location-sets) | **200, no Jinja errors** |
+| `styles.css` over HTTP | 200, `text/css; charset=utf-8`, 37,287 bytes |
+| All three font files over HTTP | 200, `font/woff2` |
+| `h1` / body font at 375px | **DM Serif Display** / **Inter** |
+| Fonts actually loaded (not just declared) | Inter 100–900, DM Serif Display 400 |
+| Horizontal overflow, 7 pages @ 375×812 | **none** — `scrollWidth` == `clientWidth` == 375 |
+| Touch targets ≥ 44px | ✓ after fixing `.loc-summary`, which measured **42px** |
+| `.tabbar` / `.fab` | `flex`; FAB correctly **absent** on `/help` (D30-adjacent: no button reloads its own page) |
+| `nav_section` — tab bar and header nav agree | ✓ correct item marked on all 5 sections |
+| First visit vs returning | first visit asks for location; hero **and** greeting appear only after |
+| Greeting | "Good afternoon." computed from the browser's clock; element absent with JS off |
+| Home prov-strip | three **real** records, one per state, glyphs ✓ ◇ ! |
+| `/about` | all three state blocks render |
+| Flow C `POST /help` | match and urgent echo her words + `verified` chip; **no-match does not echo** |
+| Privacy canary | `GET /help?problem=<canary>` does not echo — D10/D28 hold |
+| `data_warnings()` | empty |
+| Timezone fix (§8 item 20) | Lahore and Manchester answer on clocks **4 hours apart**, each agreeing with its own local time |
+| Unknown degradation | `None` (**not** `False`) for no-tz, bad-tz, empty and unparseable specs; `_local_now(None)` → `None` |
+| Footer clearance @ 375px | text clears tab bar by 71px; link clears FAB by 88px |
+
+**What this pass did NOT prove.** Acceptance check 9 passing **locally** is not check 9 passing
+**on production** — production still serves `9349a35`, the pre-redesign build. Check 9 had in
+fact already passed against that build on 2026-09-22; **the redesign replaces the stylesheet
+wholesale, so that result does not carry over.** The mobile check must be re-run against the
+deployed domain once the redesign is deployed, for the same reason §14b exists at all: local
+success has never been evidence about production in this project, and the two production-only
+failures in D27 were both invisible locally.
+
+**Method note — a real viewport, not a captured window.** `9349a35` records that its first
+attempt drove headless Edge with `--window-size` and came back with every line sliced off at
+the right edge, which looks exactly like a horizontal-overflow bug and is not one. This pass
+avoided that trap by using Playwright's viewport emulation (`viewport` + `isMobile` +
+`hasTouch`), which lays the page out at 375 CSS px rather than clipping a wider layout — and
+then **measured** `scrollWidth` against `clientWidth` and compared element bounding boxes,
+rather than judging from the image. The `fullPage` captures were used only to *look* at the
+page; the two defects reported above came from the numbers. The footer defect in particular
+was **invisible in the fullPage screenshot**, because fixed elements render at their viewport
+offset there and the bars appear to float mid-page — a capture artifact that reads as a bug
+and, on this page, was hiding a real one underneath it.
+
+**Evidence kept:** `submission-assets/mobile/` — 7 full-page captures, 3 viewport-truth
+captures, and `audit.json` with the measured numbers. Not committed (`.gitignore`), and the
+submission screenshots will be regenerated **from the deployed domain** after redeploy, per §9.
 
 ---
 
