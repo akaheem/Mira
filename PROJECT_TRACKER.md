@@ -1490,9 +1490,33 @@ this one was wrong twice before it was right.
 | §20 provenance states on `/about` | All three render, glyph + text |
 | §20 / D32 opening hours on the **campus clock** | **PASS on a discriminating case** — see below |
 | §20 fonts | All 3 woff2 **200 `font/woff2`** |
+| §19 accessibility (axe-core, WCAG 2.0/2.1 A+AA, 7 pages @375px) | **0 violations**; 21–23 passes per page |
+| §19 keyboard + visible focus | Tab order logical, **focus ring on every stop** (see below) |
 | §22 repository | **PUBLIC**; no `.venv`/`notes`/`designs`/`submission-assets`/`.env`/`__pycache__` ever tracked |
 | §22 sole authorship | **No `Co-Authored-By` in any commit, no generated-with footer.** `gh api .../contributors` returns exactly **`akaheem — 10`**, and all 10 commits resolve to `author.login=akaheem` |
 | §21 375px on production | **PASS** — see §14h (the row above it names the deployment) |
+
+**§19 accessibility was measured, not assumed.** `axe-core` 4.10.2 was injected into the live
+pages from a CDN — as a *checker*, not a dependency, so nothing was added to the repository
+and the deployed product is still the thing under test. Seven pages at 375px, rules limited to
+WCAG 2.0/2.1 levels A and AA:
+
+```
+home / explore / results / help / help-result / journey / about   ->  0 violations
+                                                            21-23 passes each
+```
+
+The keyboard pass is the part axe cannot decide, and it was run separately on `/help`, the
+only screen with a form. Tab order is logical and **every stop shows a focus ring** — skip
+link, wordmark, location switcher, textarea, the privacy detail link, the submit button, then
+the six process links and the footer link. A focus ring that is missing is invisible to axe
+and fatal to a keyboard user, which is why it was checked by pressing Tab rather than by
+reading the CSS.
+
+Two limits on that result, stated because §19 warns that automated testing alone does not
+prove accessibility: axe checks what is machine-checkable, and this pass covered seven pages
+at one viewport with one location selected. It is evidence of a clean result, not a
+certification, and it is not presented as one.
 
 **The D32 timezone fix was re-tested on production with a case that discriminates.** The
 earlier demonstration (23:08 Lahore / 18:08 UTC, §14h) was convincing but happened to be a
