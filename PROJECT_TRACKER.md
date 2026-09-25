@@ -1444,6 +1444,66 @@ submission screenshots will be regenerated **from the deployed domain** after re
 
 ---
 
+### 14i. Final submission audit — **VALIDATION RECORD 2026-09-25**
+
+Run against the **live production URL**, not localhost, per §20. Every row below is a live
+request or a `gh`/`git` query, not a reading of the source.
+
+**The README contradicted the product, and it did so on the project's strongest claim.**
+It said the sourcing was thin — *"one verified record currently carries the entire verified
+story"* and *"Most Flow C processes currently render as `unverified`"* — while the data holds
+**11 verified Flow C processes against 1 unverified**. A judge reading the README would have
+concluded the opposite of the truth about the provenance model, which is the one thing this
+submission is built around. Rewritten. This is §23's rule ("do not allow outdated
+documentation to contradict the live product") catching a real instance, and §31's
+"obsolete verified counts" finding one.
+
+**The first correction was itself wrong, and running the numbers is what caught it.** The
+initial fix said "34 campus records are illustrative", a figure taken from grepping
+`"provenance"` across `data/*.json`. That grep counts the **`conditions` entries nested inside
+transport routes**, which are sub-items and not records. The true counts, read from the parsed
+JSON:
+
+```
+records:  resources 21 + support 12 + transport 6  = 39
+states :  verified 11  |  unverified 1  |  illustrative 27
+per location:  Pakistan/Lahore 24 (5 verified, 18 illustrative, 1 unverified)
+               United Kingdom/Manchester 15 (6 verified, 9 illustrative, 0 unverified)
+```
+
+The per-location split matters and is now stated in the README: **`/about` reports the counts
+for the selected location**, so it shows 5 where the bundle holds 11. Without that sentence a
+careful judge finds a contradiction that is not there. A count is a claim like any other, and
+this one was wrong twice before it was right.
+
+**Live verification — all requests against `https://mira-student-support.vercel.app`:**
+
+| Check | Result |
+|---|---|
+| §8 privacy canary, `GET /help?problem=<canary>` | **0 occurrences in the body** — the D10 fix holds on production |
+| §8 `POST /help` with canary in the text | **200, no redirect**, canary absent from the URL; echoed only into the response body it is answering |
+| §4/§26 source URLs, all **11** verified records | **11 / 11 return 200** — no dead and no fabricated URLs |
+| §6 jurisdiction accuracy | `England`, `England and Wales`, `Pakistan` — **not** "United Kingdom" where the source does not govern it (OIAHE = England and Wales; OfS = England) |
+| §7 harassment routes | Both routes present **with distinct timelines** — Inquiry Committee: 3d charges / 7d defence / 30d findings; Ombudsperson: 3d show cause / **5d** defence. The 30-day mechanisms are not collapsed |
+| §12 `Free` vs unknown fare | `pk-lhr-r03` (`free=true`, min 0) → **`Free`**; `pk-lhr-r02` (`free=false`, confidence **unknown**, min 0) → **`Not shown`**, and the word "Free" appears **0 times** on that page |
+| §20 provenance states on `/about` | All three render, glyph + text |
+| §20 fonts | All 3 woff2 **200 `font/woff2`** |
+| §22 repository | **PUBLIC**; no `.venv`/`notes`/`designs`/`submission-assets`/`.env`/`__pycache__` ever tracked |
+| §22 sole authorship | **No `Co-Authored-By` in any commit, no generated-with footer.** `gh api .../contributors` returns exactly **`akaheem — 10`**, and all 10 commits resolve to `author.login=akaheem` |
+| §21 375px on production | **PASS** — see §14h (the row above it names the deployment) |
+
+**OPEN GAP — found here, not yet closed: there is no committed regression test for the
+router.** `routing.py` is deterministic and correct, and its docstring records the two failed
+approaches that led to requiring word boundaries on both sides. §14b records **22/22 queries
+routing correctly**, including `"I feel unsafe"` → harassment. But that was a one-off run:
+**no test file exists in the repository**, so nothing prevents the exact regression the
+docstring warns about — a substring rule that sends `"I feel unsafe"` to the *fees* record —
+from returning on the next edit to `KEYWORDS`. §9 requires these tests to be maintained, so
+this is a concrete submission requirement rather than a new feature under §38. It is recorded
+as open rather than quietly satisfied by the earlier run.
+
+---
+
 ## 15. Development environment note
 
 **Execution has happened.** The paragraph that used to sit here predicted that the first

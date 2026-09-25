@@ -160,9 +160,9 @@ The bundled dataset is a **demo environment**:
   **Mira Demo Campus** with invented buildings and hours, so the product can be demonstrated
   without misattributing facilities to a real institution.
 - Real-world **processes** are `verified` where a genuine source supports the specific claim
-  displayed, and `unverified` otherwise. Source URLs in the data were located in primary or
-  official sources and are never invented or inferred — but note that one verified record
-  currently carries the entire verified story, so the sourcing is thin rather than finished.
+  displayed, and `unverified` otherwise. Across the two demo locations there are **12
+  documented Flow C processes: 11 verified against a cited source, 1 not.** Source URLs in
+  the data were located in primary or official sources and are never invented or inferred.
 
 The app surfaces this itself: the About page renders live counts by provenance state, and
 warns on any record whose declared state and citation disagree.
@@ -199,7 +199,13 @@ Stated plainly, because the distinction matters more than the pitch:
 ## Limitations
 
 - **Coverage is thin by design.** A small number of well-sourced records was chosen over a
-  large thinly-sourced dataset. Most Flow C processes currently render as `unverified`.
+  large thinly-sourced dataset. Of the 39 records in the bundle, 11 are verified, 1 is
+  unverified, and 27 are illustrative by construction.
+- **Counts are per location, not per bundle.** The About page reports the state counts for
+  the location currently selected, so its numbers are smaller than the totals above. The two
+  demo locations hold 24 records (Pakistan/Lahore — 5 verified, 18 illustrative, 1
+  unverified) and 15 records (United Kingdom/Manchester — 6 verified, 9 illustrative, 0
+  unverified) respectively.
 - **Two demo locations**, both fictional campuses, chosen to prove the location model works
   across countries rather than to serve either.
 - **Fares are estimates or omitted.** Where Mira cannot establish a fare, it shows nothing
