@@ -1488,10 +1488,36 @@ this one was wrong twice before it was right.
 | §7 harassment routes | Both routes present **with distinct timelines** — Inquiry Committee: 3d charges / 7d defence / 30d findings; Ombudsperson: 3d show cause / **5d** defence. The 30-day mechanisms are not collapsed |
 | §12 `Free` vs unknown fare | `pk-lhr-r03` (`free=true`, min 0) → **`Free`**; `pk-lhr-r02` (`free=false`, confidence **unknown**, min 0) → **`Not shown`**, and the word "Free" appears **0 times** on that page |
 | §20 provenance states on `/about` | All three render, glyph + text |
+| §20 / D32 opening hours on the **campus clock** | **PASS on a discriminating case** — see below |
 | §20 fonts | All 3 woff2 **200 `font/woff2`** |
 | §22 repository | **PUBLIC**; no `.venv`/`notes`/`designs`/`submission-assets`/`.env`/`__pycache__` ever tracked |
 | §22 sole authorship | **No `Co-Authored-By` in any commit, no generated-with footer.** `gh api .../contributors` returns exactly **`akaheem — 10`**, and all 10 commits resolve to `author.login=akaheem` |
 | §21 375px on production | **PASS** — see §14h (the row above it names the deployment) |
+
+**The D32 timezone fix was re-tested on production with a case that discriminates.** The
+earlier demonstration (23:08 Lahore / 18:08 UTC, §14h) was convincing but happened to be a
+moment when *most* records agree under either clock. This one was chosen so the two clocks
+**disagree**:
+
+```
+at verification:  UTC 08:54   |   Lahore 13:54 PKT (+05:00)
+
+pk-lhr-008  09:00-15:00   rendered "Open until 15:00"   (UTC clock would say: Closed)
+pk-lhr-010  09:00-14:00   rendered "Open until 14:00"   (UTC clock would say: Closed)
+pk-lhr-013  16:00-21:00   rendered "Closed now"         (both clocks agree: closed)
+```
+
+Both discriminating records are **open**, which is only possible if the window is tested
+against Lahore's clock. This is the difference between demonstrating a fix and *testing* one:
+the first run could have passed for the wrong reason, this one cannot. The Manchester side
+(BST, +01:00) rendered "Open until 23:00" consistently with its own local time.
+
+Note also what the page does **not** contain: no `chip-open` / `chip-closed` class appears in
+the served HTML, because the needs cards render `open_state_label` as text rather than through
+the `open_state` macro. The wording is still model-supplied (`"Open until 15:00"`,
+`"Closed now"`, `"Hours unknown"`), so the vocabulary is single-sourced, but a future reader
+grepping the CSS for the state classes will not find them on this screen and should not
+conclude the state is missing.
 
 **GAP FOUND HERE, THEN CLOSED: the router had no committed regression test.** `routing.py`
 is deterministic and correct, and its docstring records the two failed approaches that led to
