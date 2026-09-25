@@ -145,7 +145,7 @@ amount of local testing could have revealed (D27).
 | Share button ships `hidden`; no tracking link | ✓ |
 | "Nothing you type is stored" absent from **all five** pages | ✓ |
 | Demo banner on the fictional campus | ✓ |
-| Router: 22/22 queries route correctly, including `"I feel unsafe"` → harassment | ✓ |
+| Router: 22/22 queries route correctly, including `"I feel unsafe"` → harassment | ✓ — now guarded by `tests/test_routing.py`, 33 cases (§14i) |
 | `uvicorn` serves `/static/css/styles.css` — **200, `text/css`, 29,969 bytes** | ✓ |
 | Stylesheet linked at exactly `/static/css/styles.css` (the path `vercel.json` routes) | ✓ |
 | `POST /help` matched / no-match / urgent, over real HTTP | ✓ |
@@ -153,11 +153,12 @@ amount of local testing could have revealed (D27).
 | After the D10 fix: `GET /help?problem=<canary>` does not echo | ✓ |
 
 **Currently working on:**
-- **Submission copy, not code.** Every engineering item and every verification item is closed.
-  What remains is the Devpost description, the technology list, and the demo video.
-- **One gap found by the 2026-09-25 final content audit and not yet closed:** the router was
-  validated by running 22 queries, but **no regression test is committed**. See the note under
-  §14b check 2 — the evidence exists, the guard does not.
+- **Submission copy, not code.** Every engineering item, every verification item, and the
+  final production audit (§14i) are closed. What remains is the Devpost description, the
+  technology list, and the demo video.
+
+**Next exact action:**
+- Write the Devpost description (§13, §28). **Nothing in the application is outstanding.**
 
 **Next exact action — this order is deliberate, do not reorder:**
 1. ~~`git init` + push to GitHub~~ — **DONE 2026-09-21.** `origin/main` = `8943908`, 30 files
@@ -1492,15 +1493,36 @@ this one was wrong twice before it was right.
 | §22 sole authorship | **No `Co-Authored-By` in any commit, no generated-with footer.** `gh api .../contributors` returns exactly **`akaheem — 10`**, and all 10 commits resolve to `author.login=akaheem` |
 | §21 375px on production | **PASS** — see §14h (the row above it names the deployment) |
 
-**OPEN GAP — found here, not yet closed: there is no committed regression test for the
-router.** `routing.py` is deterministic and correct, and its docstring records the two failed
-approaches that led to requiring word boundaries on both sides. §14b records **22/22 queries
-routing correctly**, including `"I feel unsafe"` → harassment. But that was a one-off run:
-**no test file exists in the repository**, so nothing prevents the exact regression the
-docstring warns about — a substring rule that sends `"I feel unsafe"` to the *fees* record —
-from returning on the next edit to `KEYWORDS`. §9 requires these tests to be maintained, so
-this is a concrete submission requirement rather than a new feature under §38. It is recorded
-as open rather than quietly satisfied by the earlier run.
+**GAP FOUND HERE, THEN CLOSED: the router had no committed regression test.** `routing.py`
+is deterministic and correct, and its docstring records the two failed approaches that led to
+requiring word boundaries on both sides. §14b records **22/22 queries routing correctly**,
+including `"I feel unsafe"` → harassment. But that was a one-off run: **no test file existed in
+the repository**, so nothing prevented the exact regression the docstring warns about — a
+substring rule sending `"I feel unsafe"` to the *fees* record — from returning on the next
+edit to `KEYWORDS`. §9 requires these tests to be maintained, so this was a concrete
+submission requirement rather than a new feature under §38.
+
+Now `tests/test_routing.py`: **33 query cases in 5 test functions, all passing**, written
+against stdlib `assert` so it adds no dependency to the deployed function.
+
+**The test was then checked for teeth, because a regression test that passes trivially is
+worse than none — it is a false assurance.** Recompiling `_TERM_PATTERNS` with the old
+leading-boundary-only rule reproduces the historical bug exactly and the suite fails:
+
+```
+current router          "I feel unsafe"  ->  harassment_concern     (correct)
+old rule (\bterm)       "I feel unsafe"  ->  cant_pay_fees          (the regression)
+suite under old rule    4 / 6 false-match cases fail  ->  FAILS
+```
+
+So the guard is real. This is §9's own lesson applied to §9's own remedy: the fix was not
+accepted because the tests passed, but because they **fail** when the bug is put back.
+
+**A deliberate non-change.** `tests/` is not listed in `.vercelignore`, so it ships in the
+upload. It is left that way on purpose: `app.py` never imports it, so it cannot affect
+runtime, and editing the ignore file would require a redeploy — which would invalidate the
+§14h verification record — to achieve nothing functional. The narrower diff was chosen over
+the tidier one, and the reason is recorded here so a later reader does not "fix" it.
 
 ---
 
