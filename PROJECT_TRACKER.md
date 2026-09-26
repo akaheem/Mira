@@ -1574,6 +1574,66 @@ runtime, and editing the ignore file would require a redeploy — which would in
 §14h verification record — to achieve nothing functional. The narrower diff was chosen over
 the tidier one, and the reason is recorded here so a later reader does not "fix" it.
 
+### 14j. Submission gallery — **VALIDATION RECORD 2026-09-26**
+
+**The finding.** Four screenshot sets existed in `submission-assets/`. Only one was
+submittable, and it was missing the two images the story most needs.
+
+| Set | Captured | Status |
+|---|---|---|
+| `submission-assets/*.png` | 22 Sep | **DISQUALIFIED** — predates `0e09db9` *"Rebuild the interface"*, so it shows a UI that no longer exists; also 2360px desktop width |
+| `mobile/` | 24 Sep | **DISQUALIFIED** — post-rebuild but **pre-FAB-fix** |
+| `screens/` | 25 Sep | current — 375px, post-rebuild, post-fix |
+| `mobile-production/` | 25 Sep | current, but duplicates `screens/` minus the trust strip |
+
+**How the FAB question was settled.** Not by date, and not by byte size — the two `mobile*`
+sets differ by about 1KB per file, which proves nothing in either direction. The two
+`audit.json` files are identical except at `01-welcome`, where `fabDisplay` is `"flex"` in
+`mobile/` and `"absent"` in `mobile-production/`. The fix is isolated to that single entry, so
+the audit file identifies which build produced the pixels. Same technique as §14h: identify
+the deployment by **behaviour**, not by a version string.
+
+**What was missing, and why it mattered.** Every current screenshot was Pakistan/Lahore. None
+showed a verified process with its source block, and none showed the second jurisdiction —
+the two images §13d's framing depends on. Three were captured from production:
+
+| File | Verified to contain |
+|---|---|
+| `screens/9-pk-fees-verified.png` | h1 *"I can't pay my tuition or semester fee"*, ✓ Verified, *Applies in Pakistan*, three `pbm.gov.pk` sources each *checked 2026-09-22* |
+| `screens/10-uk-fees-verified.png` | h1 *"I can't pay my tuition or living costs"*, ✓ Verified, *Applies in England*, one `gov.uk` source *checked 2026-09-22* |
+| `screens/11-about-counts.png` | the `table.counts` block — ✓ 5 · ◇ 18 · ! 1 |
+
+Each capture wrote `capture-report.json` recording what the page was **verified to contain**
+(h1, provenance chips, jurisdiction text, and the `href`s actually present) alongside the PNG,
+so the captions in `submission-assets/SCREENSHOTS.md` are written from evidence rather than
+from what the page was expected to show.
+
+**The pair is itself the evidence.** The same `cant_pay_fees` problem renders a different
+title in each jurisdiction — *semester fee* in Pakistan, *living costs* in England — and the
+UK card carries *"Higher education funding is devolved in the UK, so this is the England
+route."* That is the jurisdiction model **demonstrated** rather than asserted (§14f).
+
+**A cross-check that passed.** `table.counts` reads **5 + 18 + 1 = 24** for Pakistan/Lahore —
+exactly the per-location figure corrected into the README earlier in this session. Two
+independent surfaces, the About page's live counts and the README's prose, now agree.
+
+**One capture artifact, disclosed.** `.tabbar` is `position: fixed`; in a full-page capture
+Chromium paints it at its viewport offset, landing it mid-image on top of body text. It is set
+to `position: static` **for the capture only**, so it appears once at the document end.
+Nothing was hidden and nothing else on the page was altered. Recorded here because a later
+reader finding `addStyleTag` in the script should know it was not cosmetic licence.
+
+**One overstatement corrected.** `DEVPOST.md` claimed the three provenance states appear "on
+the **first** screen". They appear on the **home** screen; a true first visit shows the
+location chooser and the demo disclosure. Changed to "home screen" — §13d's rule, applied to
+our own copy.
+
+**Checked and cleared.** `DEVPOST.md`'s `62.5%` counselling-awareness figure is **not**
+invented: it is ledger row **§4a V1** (Sharjah — 62.5% unaware counselling existed; 44.4%
+"didn't know the location", 36.1% "didn't know how to contact"), cross-checked against
+Makerere, Zimbabwe and Trellis. Its *"11 of 12 verified"* and *"13 pages at 375px"* claims
+also match the record.
+
 ---
 
 ## 15. Development environment note
