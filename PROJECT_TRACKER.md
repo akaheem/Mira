@@ -28,9 +28,9 @@ REDESIGN STATUS: LIVE IN PRODUCTION
 Tokens        : new palette + self-hosted type system (D31)
 Navigation    : header nav + mobile tab bar + persistent Flow C action
 Mobile 375px  : PASSES on production -- no horizontal overflow, all targets >= 44px
-                (re-measured on evveu9qfd / 2324c23, 2026-09-25)
+                (re-measured on eunhfp61l / 33d3e98, 2026-09-26)
 Fonts         : Inter + DM Serif Display load and apply on the public URL
-Committed     : 2324c23 (FAB fix), pushed to origin/main, deployed and Ready
+Committed     : 33d3e98 (tab icon), pushed to origin/main, deployed and Ready
 Screenshots   : captured from the deployed domain (submission-assets/screens/)
 ```
 
@@ -58,6 +58,13 @@ behaviour here and by URL elsewhere.
 The lesson is the one from `git push` vs `vercel deploy`: **a validation record has a commit
 too.** "Passes on production" is not a property of the project, it is a property of a
 `(commit, deployment)` pair, and a table that names neither can silently outlive its subject.
+
+**Amendment 2026-09-26 — the same block moved a second time.** Adding the favicon (§14k)
+produced another commit and another deployment, so the block above was re-measured again on
+`33d3e98` / `eunhfp61l`. The 375px pass, the axe audit and the route sweep were all re-run
+there rather than carried forward on the strength of the previous run. That this is the
+*second* time the same lesson has had to be applied to the same three lines is the argument
+for naming the pair inside the block itself, which it now does.
 
 **The three defects this pass found, all invisible until the page was rendered at 375px:**
 
@@ -174,17 +181,21 @@ amount of local testing could have revealed (D27).
 9. ~~Re-run the 375px pass against `evveu9qfd`~~ — **DONE 2026-09-25.** **PASS** on the live
    alias: 7/7 pages at `scrollWidth == clientWidth == 375`, all targets ≥ 44px (§14h).
    This closed the last open verification item.
-10. Devpost description · technology list · demo video ← *next action*
+10. ~~Add a site favicon and redeploy~~ — **DONE 2026-09-26.** `33d3e98` pushed and deployed
+    as `eunhfp61l`, Ready and aliased. The 375px pass, the axe audit and the route sweep were
+    re-run against that deployment (§14k); the screenshot selection closed in the same pass
+    (§14j).
+11. Devpost description · technology list · demo video ← *next action*
 
 **Deployment chain — live state:**
 
 | Step | State |
 |---|---|
 | Git identity · `gh` · Vercel auth | **VERIFIED** — all three, see §14a |
-| GitHub push | **VERIFIED** — `2324c23` on `main`, sole author, no attribution trailer (D26) |
+| GitHub push | **VERIFIED** — `33d3e98` on `main`, sole author, no attribution trailer (D26) |
 | Vercel deploy | **LIVE** — one function, region iad1 |
 | **Public URL** | **https://mira-student-support.vercel.app** |
-| Production acceptance test (§14b) | **9 / 10 PASS** — check 9 (mobile viewport) **PASSES on production**, re-measured 2026-09-25 against `evveu9qfd` / `2324c23` (§14h). No verification item is open. |
+| Production acceptance test (§14b) | **9 / 10 PASS** — check 9 (mobile viewport) **PASSES on production**, re-measured 2026-09-26 against `eunhfp61l` / `33d3e98` (§14k, superseding the §14h measurement). No verification item is open. |
 
 **What deployment actually caught — and why the order was right.** Vercel reported a successful
 deploy while serving a **static copy of the repository with no function at all**. The project
@@ -1368,6 +1379,13 @@ preset confirmed `FastAPI` **before** deploying, so the D27 failure mode was not
 > greeting, hours) are unaffected by it. **The acceptance check 9 row has since been
 > re-run against `evveu9qfd` and is marked accordingly below** — a full re-measurement of
 > every row against the current deployment has not been done and is not claimed.
+>
+> **Further scope note, 2026-09-26.** A second redeploy has since followed — the favicon,
+> `33d3e98` / `eunhfp61l` — so the rows below now describe the deployment *before the
+> current one* as well. Rather than re-scope them a second time, a **fresh pass** (375px
+> acceptance, axe audit, route sweep) was run against the current deployment and is recorded
+> in **§14k**. Read the table below as the 2026-09-24 record that it is; read §14k for what
+> is serving now.
 
 | Check | Result |
 |---|---|
@@ -1633,6 +1651,75 @@ invented: it is ledger row **§4a V1** (Sharjah — 62.5% unaware counselling ex
 "didn't know the location", 36.1% "didn't know how to contact"), cross-checked against
 Makerere, Zimbabwe and Trellis. Its *"11 of 12 verified"* and *"13 pages at 375px"* claims
 also match the record.
+
+---
+
+### 14k. Tab icon, and the deployment that followed — **VALIDATION RECORD 2026-09-26**
+
+**What was asked.** The owner supplied `designs/favicon.png` and asked for it to be the
+site's favicon.
+
+**What was actually missing.** Not a wrong favicon — *no* favicon. `base.html` declared no
+`<link rel="icon">`, the tree contained no `favicon.ico`, and `vercel.json` is an empty
+schema stub with no rewrite. So the browser's fallback request for `/favicon.ico` asked for a
+file that has never existed, and the tab showed the blank-page glyph. Confirmed by glob and
+by reading `vercel.json`, not by inference.
+
+**The source could not ship, and the reason is a size argument rather than a taste one.**
+`designs/favicon.png` is 1254×1254 and 1.45 MB. A favicon is fetched on **every page load**,
+so shipping the original would have made the tab icon the heaviest asset on the site —
+larger than the page and the stylesheet together. Two files were generated instead:
+
+| File | Size | Note |
+|---|---|---|
+| `static/favicon-32.png` | 2,752 bytes | alpha preserved — sampled `A=0` at the edges, so the mark keeps transparency in the tab |
+| `static/apple-touch-icon.png` | 44,482 bytes | flattened onto **white** |
+
+The 32px is produced by **progressive halving**, not a single 1254→32 resize, which aliases
+badly. The 180px is flattened because iOS composites transparency onto **black** — shipping
+the alpha channel would have rendered the mark as a black tile on a home screen.
+
+**One deploy failure, recorded because its error text misleads.** `.vercel/project.json`
+names orgId `team_Q2MMTrt2vuSslLpYrF29fMKa`, which is not this account's team
+(`mibraheem45846-8692s-projects`). `vercel deploy --prod` returned
+`{"status":"error","reason":"deploy_failed","message":"Not authorized"}` — which reads like a
+credential problem and is a stale project link. Resolved with an explicit
+`--scope mibraheem45846-8692s-projects`.
+
+**A propagation artifact, recorded so a later reader does not chase it — and because I got it
+wrong once.** Immediately after the deploy `/static/favicon-32.png` returned **404** while
+`/` already served the new tag. I called that a regression I had introduced. It was not:
+re-requesting returned 200. Static assets are promoted to the CDN separately from the
+function, so a 404 on a **newly added** static asset in the first moments after a deploy is
+propagation lag. Check again before diagnosing.
+
+**Re-verified against `eunhfp61l` / `33d3e98`, on the public alias rather than localhost:**
+
+| Check | Result |
+|---|---|
+| 375px acceptance, 7 pages | `scrollWidth == clientWidth == 375` on every page — no horizontal overflow |
+| Touch targets @ 375px | every one ≥ 44px |
+| Typography on production | `h1` → DM Serif Display, body → Inter, both loaded |
+| Tab bar / FAB | as §14h — FAB absent on `/` and `/help`, present elsewhere |
+| axe-core 4.10.2, 7 pages | **0 violation groups** |
+| Tab walk on `/help` | **14 / 14** stops show a visible focus indicator |
+| Route sweep | **12 / 12** routes 200, including both new PNGs |
+| Privacy canary | `GET /help?problem=mira-canary-7f3a91` → 200, 5,992 bytes, **echoes canary: False**; form method still POST |
+
+**Scope — what this record does not claim.**
+
+- `0 violations` means no rule in *that* ruleset fired on *those 7 pages* at 375px. axe finds
+  what axe looks for; this is a checker run, not an accessibility certification.
+- The canary proves the string is not echoed back in the response body. It does **not** prove
+  anything about the platform's own request logs, which Mira does not control — which is
+  precisely why the app's privacy wording stops where it stops and does not say "nothing is
+  stored".
+- The favicon is a presentation change. It touches no routing, no data and no provenance
+  field, and nothing in this section is evidence about any of those.
+
+**This supersedes §14h and §14i for the current deployment.** Those sections remain the
+records of what was measured on `0e09db9` and `2324c23`; they are not deleted or reworded,
+because a validation record belongs to the pair it was taken on.
 
 ---
 
